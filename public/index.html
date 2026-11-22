@@ -124,8 +124,8 @@ nav button{font-size:12px;padding:10px 2px;white-space:nowrap}
   <button data-t="quiz" class="on">テスト</button>
   <button data-t="slot">あそび</button>
   <button data-t="chal">チャレンジ</button>
-  <button data-t="edit">編集</button>
   <button data-t="shop">強化・設定</button>
+  <button data-t="edit">編集</button>
 </nav>
 
 <section id="quiz">
@@ -188,6 +188,7 @@ nav button{font-size:12px;padding:10px 2px;white-space:nowrap}
 </section>
 
 <section id="edit" class="hidden">
+  <p style="margin:0 0 8px;font-size:13px;font-weight:900;color:var(--ng)">⚠ サイト管理者の許可がない限り変えないでください。</p>
   <div class="card">
     <div class="row" style="justify-content:space-between;margin-bottom:8px">
       <span class="row"><button class="btn" id="eP" style="padding:10px 14px">◀</button><input type="number" id="eN" class="num" min="1" value="1"><button class="btn" id="eNx" style="padding:10px 14px">▶</button></span>
@@ -243,6 +244,21 @@ nav button{font-size:12px;padding:10px 2px;white-space:nowrap}
 
   <div class="card" id="ups"></div>
   <div class="card stats"><div><b id="sc">0</b>正解数</div><div><b id="sm">0</b>最高所持コイン</div><div><b id="sa">0%</b>正答率</div><div><b id="sb">0</b>最高コンボ</div></div>
+  <div class="card" id="fbCard">
+    <h3 style="margin:0 0 6px">☁ オンラインセーブ（ID・パスワード）</h3>
+    <p class="note">IDとパスワードでログインすると、セーブデータがクラウドに保存され、別の端末でも続きから遊べます。IDは英数字・「_」「.」「-」の3〜20文字、パスワードは6文字以上。パスワードを忘れると復元できません。</p>
+    <div id="fbLogin">
+      <input id="fbId" class="fld" placeholder="ID（例：leap_taro）" autocomplete="username" autocapitalize="none">
+      <input id="fbPw" class="fld" type="password" placeholder="パスワード" autocomplete="current-password">
+      <div class="row"><button class="btn" id="fbIn">ログイン</button><button class="btn" id="fbUp">新規登録</button></div>
+    </div>
+    <div id="fbUser" class="hidden">
+      <p style="margin:0 0 8px">ログイン中：<b id="fbName"></b></p>
+      <label class="note"><input type="checkbox" id="fbAuto" checked> 自動でクラウドに保存する</label>
+      <div class="row" style="margin-top:8px"><button class="btn" id="fbPush">今すぐ保存</button><button class="btn" id="fbPull">クラウドから読み込む</button><button class="btn" id="fbOut">ログアウト</button></div>
+    </div>
+    <p class="note" id="fbMsg" style="margin-top:8px"></p>
+  </div>
   <div class="card">
     <h3 style="margin:0 0 6px">単語リスト</h3>
     <p class="note">公開中の単語リストを自動で読み込みます。リストが更新されると、次に開いたときに自動で反映されます（例文・評価値は同じ単語のものを引き継ぎます）。下から自分で読み込んだリストを使っている間は、自動では切り替わりません。</p>
@@ -260,21 +276,6 @@ nav button{font-size:12px;padding:10px 2px;white-space:nowrap}
       <span class="note" id="impMsg"></span>
     </div>
     <p class="note">現在の出題数：<span id="wc"></span>語</p>
-  </div>
-  <div class="card" id="fbCard">
-    <h3 style="margin:0 0 6px">☁ オンラインセーブ（ID・パスワード）</h3>
-    <p class="note">IDとパスワードでログインすると、セーブデータがクラウドに保存され、別の端末でも続きから遊べます。IDは英数字・「_」「.」「-」の3〜20文字、パスワードは6文字以上。パスワードを忘れると復元できません。</p>
-    <div id="fbLogin">
-      <input id="fbId" class="fld" placeholder="ID（例：leap_taro）" autocomplete="username" autocapitalize="none">
-      <input id="fbPw" class="fld" type="password" placeholder="パスワード" autocomplete="current-password">
-      <div class="row"><button class="btn" id="fbIn">ログイン</button><button class="btn" id="fbUp">新規登録</button></div>
-    </div>
-    <div id="fbUser" class="hidden">
-      <p style="margin:0 0 8px">ログイン中：<b id="fbName"></b></p>
-      <label class="note"><input type="checkbox" id="fbAuto" checked> 自動でクラウドに保存する</label>
-      <div class="row" style="margin-top:8px"><button class="btn" id="fbPush">今すぐ保存</button><button class="btn" id="fbPull">クラウドから読み込む</button><button class="btn" id="fbOut">ログアウト</button></div>
-    </div>
-    <p class="note" id="fbMsg" style="margin-top:8px"></p>
   </div>
   <div class="card">
     <h3 style="margin:0 0 6px">セーブデータ</h3>
