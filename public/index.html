@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LEAPスロット単語テスト</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+:root{--bg:#1c1233;--panel:#2a1b4a;--line:#46307a;--text:#f6f1ff;--sub:#b5a6d9;--gold:#ffc233;--ok:#3ddc97;--ng:#ff5d73;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4effc;--panel:#fff;--line:#d3c4f0;--text:#24113f;--sub:#6b5a8f;--gold:#b7790a;--ok:#12975f;--ng:#d6334d;color-scheme:light}}
+:root[data-theme="dark"]{--bg:#1c1233;--panel:#2a1b4a;--line:#46307a;--text:#f6f1ff;--sub:#b5a6d9;--gold:#ffc233;--ok:#3ddc97;--ng:#ff5d73}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif}
+body{max-width:520px;margin:0 auto;padding:0 14px 40px}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:12px 0 8px;z-index:5;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--line)}
+.coins{font-size:32px;font-weight:900;color:var(--gold);line-height:1}
+.coins small{font-size:13px;color:var(--sub);font-weight:500;margin-left:4px}
+.combo{text-align:right;font-weight:700;color:var(--sub);font-size:13px}
+.combo b{font-size:22px;color:var(--ok)}
+nav{display:flex;gap:6px;margin:12px 0}
+nav button{flex:1;padding:10px;border:2px solid var(--line);background:transparent;color:var(--sub);border-radius:12px;font:700 15px inherit;font-family:inherit;cursor:pointer}
+nav button.on{background:var(--gold);color:#2a1b00;border-color:var(--gold)}
+.card{background:var(--panel);border:2px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px}
+.q{font-size:38px;font-weight:900;text-align:center;margin:10px 0 4px;word-break:break-word}
+.hint{text-align:center;color:var(--sub);font-size:13px;min-height:40px}
+.ch small.tag{display:block;font-weight:500;opacity:.85;font-size:12px;visibility:hidden}
+.ch.done small.tag{visibility:visible}
+.ch #nx{margin-top:4px;text-align:center;background:var(--gold);color:#2a1b00;border-color:var(--gold);visibility:hidden}
+.ch.done #nx{visibility:visible}
+.ch .xr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ch .xb{text-align:center;padding:11px 8px;font-size:14px;color:var(--sub)}
+.pop{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);width:min(94vw,492px);background:var(--panel);border:3px solid var(--gold);border-radius:18px;padding:14px 16px;z-index:30;box-shadow:0 10px 40px rgba(0,0,0,.55);animation:pp .18s ease-out}
+@keyframes pp{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+.pop b{font-size:20px;color:var(--gold)}
+.pop #popM{margin:6px 0 10px;font-size:16px;font-weight:700;line-height:1.5}
+.pop .btn{flex:1;padding:10px 14px;text-align:center}
+.dice{display:flex;gap:14px;justify-content:center;margin:6px 0 16px}
+.die{width:70px;height:70px;border-radius:14px;background:#fff;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:9px;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.die i{border-radius:50%;margin:2px}
+.die i.on{background:#2a1b4a}
+.dice.spin .die{filter:blur(1px)}
+.dr{display:grid;gap:6px;margin-bottom:8px}
+.dc{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--text);font-family:inherit;font-weight:900;font-size:18px;cursor:pointer;min-height:54px}
+.dc small{font-size:10px;color:var(--sub);font-weight:500}
+.dc i{position:absolute;top:-8px;right:-4px;background:var(--gold);color:#2a1b00;font-style:normal;font-size:11px;font-weight:900;padding:1px 6px;border-radius:99px}
+.dc.hit{border-color:var(--ok);box-shadow:0 0 12px var(--ok)}
+.dlab{font-size:11px;color:var(--sub);margin:8px 0 4px}
+@keyframes blink{from{opacity:1}to{opacity:.45}}
+@keyframes pulse{from{box-shadow:0 0 6px var(--ng)}to{box-shadow:0 0 26px var(--ng)}}
+@keyframes shk{0%{transform:translate(0)}25%{transform:translate(-1px,1px)}50%{transform:translate(1px,-1px)}75%{transform:translate(-1px,-1px)}100%{transform:translate(0)}}
+.card.reach{border-color:var(--ng);animation:pulse .5s ease-in-out infinite alternate}
+.card.sreach{border-color:var(--gold);animation:pulse .25s ease-in-out infinite alternate}
+.sreach .reels{animation:shk .1s linear infinite}
+.reel.rch{border-color:var(--gold);box-shadow:0 0 14px var(--gold);animation:blink .4s alternate infinite}
+.reel.rchw{border-color:var(--ng);animation:blink .25s alternate infinite}
+.rbn{display:inline-block;font-size:26px;font-weight:900;color:var(--ng);letter-spacing:2px;animation:blink .4s alternate infinite}
+@keyframes rbp{from{background-position:0 0,0 0}to{background-position:0 0,300% 0}}
+@keyframes rbp2{from{background-position:0 0}to{background-position:300% 0}}
+@keyframes hue{from{filter:hue-rotate(0)}to{filter:hue-rotate(360deg)}}
+@keyframes fall{to{top:105vh;transform:rotate(720deg)}}
+.card.jpwin{border:3px solid transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,linear-gradient(90deg,#ff3b3b,#ffb300,#ffee00,#3ddc97,#00b8ff,#7c4dff,#ff4fd8,#ff3b3b) border-box;background-size:100% 100%,300% 100%;animation:rbp 1.4s linear infinite;box-shadow:0 0 28px rgba(255,255,255,.35)}
+.jpwin .reel.win{border-color:#ff4fd8;animation:hue 1s linear infinite}
+.jpt{display:inline-block;font-size:30px;background:linear-gradient(90deg,#ff3b3b,#ffb300,#ffee00,#3ddc97,#00b8ff,#7c4dff,#ff4fd8,#ff3b3b);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rbp2 1.2s linear infinite}
+.cf{position:fixed;top:-16px;width:10px;height:14px;z-index:40;pointer-events:none;animation:fall linear forwards}
+.hrow{display:grid;gap:6px}
+.ov{position:fixed;inset:0;z-index:60;background:var(--bg);padding:calc(env(safe-area-inset-top,0px) + 10px) 12px calc(env(safe-area-inset-bottom,0px) + 12px);display:flex;flex-direction:column;align-items:center;overflow:auto}
+.ov.hidden{display:none}
+.dwBk{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.5)}
+.dw{position:fixed;top:0;right:0;bottom:0;width:min(86vw,340px);z-index:71;background:var(--panel);border-left:2px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 12px) 14px calc(env(safe-area-inset-bottom,0px) + 14px);overflow:auto;transform:translateX(100%);transition:transform .25s}
+.dw.open{transform:none}
+.dwBk.hidden{display:none}
+.hr{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--text);font-family:inherit;text-align:left;cursor:pointer;width:100%}
+.hr.sel{border-color:var(--gold);background:rgba(255,194,51,.12)}
+.hr .nm{flex:1;font-weight:700;font-size:14px;line-height:1.3}
+.hr .od{font-size:12px;color:var(--sub);text-align:right;line-height:1.4}
+.hr .mk{min-width:34px;text-align:center;font-weight:900;color:var(--gold);font-size:13px}
+.hb{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-weight:900;font-size:15px;border:2px solid rgba(0,0,0,.35);flex:none}
+.lane{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.ln{position:relative;flex:1;height:26px;border-radius:8px;background:var(--bg);border-right:4px solid var(--gold);overflow:hidden}
+.hm{position:absolute;top:0;font-size:20px;line-height:26px;transform:scaleX(-1)}
+.rk{width:30px;text-align:center;font-weight:900;color:var(--gold);font-size:12px}
+.tk{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-top:6px;font-size:13px}
+.ch{display:grid;gap:8px;margin-top:14px}
+.ch button,.btn{padding:14px;border-radius:14px;border:2px solid var(--line);background:transparent;color:var(--text);font-family:inherit;font-size:16px;font-weight:700;text-align:left;cursor:pointer;line-height:1.4}
+.ch button.ok{background:var(--ok);border-color:var(--ok);color:#06241a}
+.ch button.ng{background:var(--ng);border-color:var(--ng);color:#fff}
+.gain{text-align:center;min-height:28px;font-weight:900;font-size:18px;margin-top:10px}
+.gain.ok{color:var(--ok)}.gain.ng{color:var(--ng)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg button{padding:7px 12px;border-radius:99px;border:2px solid var(--line);background:transparent;color:var(--sub);font:700 13px inherit;font-family:inherit;cursor:pointer}
+.seg button.on{border-color:var(--gold);color:var(--gold)}
+.reels{display:grid;grid-template-columns:repeat(3,84px);gap:8px;justify-content:center;margin:6px 0 16px}
+.jp{text-align:center;font-weight:700;color:var(--sub);font-size:13px;margin-bottom:10px}.jp b{display:block;font-size:26px;color:var(--gold)}
+.reel{height:84px;border-radius:14px;background:var(--bg);border:3px solid var(--line);display:grid;place-items:center;font-size:44px;opacity:.55}.reel.mid{border-color:var(--sub);opacity:1}.reel.win{border-color:var(--gold);box-shadow:0 0 14px var(--gold);opacity:1}
+.reel.spin{filter:blur(1.5px)}
+.spinbtn{width:100%;padding:16px;border:0;border-radius:16px;background:var(--gold);color:#2a1b00;font:900 20px inherit;font-family:inherit;cursor:pointer;margin-top:14px}
+.spinbtn:disabled{opacity:.45}
+.res{text-align:center;font-weight:900;font-size:18px;min-height:28px;margin-top:12px}
+.pay{color:var(--sub);font-size:12px;line-height:1.7;margin-top:12px}
+.up{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.up:last-child{border:0}
+.up h3{margin:0 0 2px;font-size:16px}.up p{margin:0;color:var(--sub);font-size:12px}
+.up button{min-width:96px;text-align:center;background:var(--gold);color:#2a1b00;border-color:var(--gold)}
+.up button:disabled{opacity:.4}
+textarea{width:100%;height:90px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--text);padding:10px;font-size:13px;font-family:inherit}
+.note{color:var(--sub);font-size:12px;line-height:1.6}
+.stats{display:flex;justify-content:space-around;text-align:center;color:var(--sub);font-size:12px}
+.stats b{display:block;color:var(--text);font-size:20px}
+.num{width:78px;padding:8px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--text);font-family:inherit;font-size:15px;text-align:center}
+nav button{font-size:12px;padding:10px 2px;white-space:nowrap}
+.q.ex{font-size:20px;line-height:1.7;text-align:left;font-weight:700}
+.fld{display:block;width:100%;margin:4px 0 10px;padding:10px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--text);font-family:inherit;font-size:15px}
+.hidden{display:none}
+.tmr{height:8px;background:var(--bg);border-radius:6px;overflow:hidden;margin:6px 0 2px}
+.tmr i{display:block;height:100%;width:100%;background:var(--ok)}
+</style>
+</head>
+<body>
+<header>
+  <div class="coins"><span id="coins">0</span><small>コイン</small></div>
+  <div class="combo">コンボ <b id="combo">0</b><br>倍率 ×<span id="mult">1.00</span></div>
+</header>
+<nav>
+  <button data-t="quiz" class="on">テスト</button>
+  <button data-t="slot">あそび</button>
+  <button data-t="chal">チャレンジ</button>
+  <button data-t="edit">編集</button>
+  <button data-t="shop">強化・設定</button>
+</nav>
+
+<section id="quiz">
+  <div class="card row" style="padding:12px 16px;justify-content:space-between">
+    <span class="note">出題範囲 No.</span>
+    <span class="row"><input type="number" id="rf" min="1" class="num"> 〜 <input type="number" id="rt" min="1" class="num"></span>
+    <span class="note" id="rn"></span>
+  </div>
+  <div class="card">
+    <div class="row seg" style="justify-content:center">
+      <button data-m="en" class="on">英語→日本語</button>
+      <button data-m="jp">日本語→英語</button>
+      <button data-m="ex">例文 日→英</button>
+      <button data-m="ej">例文 英→日</button>
+    </div>
+    <div class="q" id="q"></div>
+    <div class="hint" id="hint"></div>
+    <div id="tmrW" style="display:none"><div class="tmr"><i id="tmrB"></i></div><div class="note" id="tmrT" style="text-align:right"></div></div>
+    <div class="ch" id="ch"></div>
+    <div class="gain" id="gain"></div>
+  </div>
+</section>
+
+<section id="slot" class="hidden">
+  <div class="row seg" style="justify-content:center;margin-bottom:12px">
+    <button data-g="slot" class="on">🎰 スロット</button>
+    <button data-g="dice">🎲 サイコロ</button>
+    <button data-g="derby">🐎 ダービー</button>
+  </div>
+  <div class="card" id="slotCard">
+    <div class="jp">👑 ジャックポット（7️⃣7️⃣7️⃣）<b id="jp">1000</b></div>
+    <div class="reels" id="reels"></div>
+    <div class="row seg" style="justify-content:center" id="bets"></div>
+    <button class="spinbtn" id="spin">回す</button>
+    <div class="res" id="res"></div>
+    <div class="pay">真ん中の段の左→右を判定します。<br>7️⃣×3：200倍＋ジャックポット　💎×3：80倍　🎰×3：30倍<br>🍒×3：15倍　🔔×3：12倍　🍉×3：8倍　🔁×3：賭け金が戻る<br>7・💎・🎰の混合：5倍　🍒🍒＋他：4倍<br>左端が🍒（中央はチェリー以外）：2倍　🍉🍉＋他：2倍　🔔🔔＋他：2倍<br>賭け金の5%がジャックポットにたまります。</div>
+  </div>
+  <div class="card hidden" id="diceCard">
+    <div class="dice" id="dice"></div>
+    <div class="row seg" style="justify-content:center;margin-bottom:12px"><span class="note">1タップ</span><span class="row seg" id="chips"></span></div>
+    <div id="dgrid"></div>
+    <div class="row" style="justify-content:space-between;margin-top:6px"><span class="note">賭け合計 <b id="dtot" style="color:var(--gold);font-size:18px">0</b></span><button class="btn" id="dclr" style="padding:8px 14px">ベットをクリア</button></div>
+    <button class="spinbtn" id="droll">振る</button>
+    <div class="res" id="dres"></div>
+    <div class="pay">マスをタップするとその金額がベットされます（複数のマスに賭けられます）。<br>大(11〜17)・小(4〜10)：的中で賭け金の1倍が増える。ゾロ目が出ると大小はどちらも負け。<br>出目：その数が出た個数ぶん1倍ずつ（1個なら1倍、2個なら2倍、3個なら3倍）。<br>ゾロ目（どれでも）：30倍／ゾロ目指定（例 555）：180倍。</div>
+  </div>
+  <div class="card hidden" id="derbyCard">
+    <div id="track"></div>
+    <div id="live" class="row" style="justify-content:center;gap:5px;min-height:30px;margin-bottom:6px"></div>
+    <div class="res" id="dbres" style="white-space:pre-line;font-size:15px"></div>
+    <div class="row seg" id="dbTypes" style="justify-content:center;margin:12px 0 8px"></div>
+    <div class="hrow" id="dbPick"></div>
+    <div class="note" id="dbOddsLine" style="margin:8px 0;min-height:18px;text-align:center"></div>
+    <div class="row" style="justify-content:center"><span id="dbChips" class="row seg"></span><button class="btn" id="dbAdd" style="padding:8px 14px">ベット追加</button></div>
+    <div id="dbTkt"></div>
+    <div class="row" style="justify-content:space-between;margin-top:8px"><span class="note">賭け合計 <b id="dbTot" style="color:var(--gold);font-size:18px">0</b></span><button class="btn" id="dbClr" style="padding:8px 14px">ベットをクリア</button></div>
+    <button class="spinbtn" id="dbGo">レース開始</button>
+    <div class="pay">単勝：1着を当てる／複勝：3着以内／馬連：1・2着の2頭（順不同）／馬単：1・2着を着順どおり<br>ワイド：3着以内の2頭（順不同）／3連複：1〜3着の3頭（順不同）／3連単：1〜3着を着順どおり<br>オッズはレースごとに変わり、払戻率は約85%です。オッズは賭け金に対する払戻の倍率（賭け金込み）です。</div>
+  </div>
+</section>
+
+<section id="edit" class="hidden">
+  <div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <span class="row"><button class="btn" id="eP" style="padding:10px 14px">◀</button><input type="number" id="eN" class="num" min="1" value="1"><button class="btn" id="eNx" style="padding:10px 14px">▶</button></span>
+      <span class="row"><button class="btn" id="eGo">表示</button><button class="btn" id="eFind">次の例文未登録</button></span>
+    </div>
+    <p class="note" id="eInfo"></p>
+    <label class="note">英単語</label><input id="eW" class="fld">
+    <label class="note">意味（「、」区切り）</label><input id="eM" class="fld">
+    <label class="note">例文（英語）　対象語を [ ] で囲むと確実に空欄になります</label><textarea id="eE" class="fld" style="height:74px"></textarea>
+    <label class="note">例文の訳（日本語）　対象語の意味を「 」で囲むと、英→日モードの正解になります</label><textarea id="eJ" class="fld" style="height:60px"></textarea>
+    <div class="row"><button class="btn" id="eSave">保存</button><button class="btn" id="eDel">この番号を削除</button></div>
+    <p class="note" id="eMsg"></p>
+  </div>
+  <div class="card">
+    <h3 style="margin:0 0 6px">単語リストの出力（txt）</h3>
+    <p class="note" id="tStat"></p>
+    <p class="note">番号・英単語・意味・例文・訳をtxtにします。「強化・設定」の単語追加から読み込み直せます。</p>
+    <div class="row" style="margin:8px 0"><button class="btn" id="tOut">txtで書き出す</button><button class="btn" id="tCopy">コピー</button><button class="btn" id="wReset">公開リストに戻す</button></div>
+    <textarea id="tTxt" class="fld" style="height:70px" placeholder="ファイルが使えない場合、ここに表示されます"></textarea>
+    <p class="note" id="tMsg"></p>
+  </div>
+</section>
+
+<section id="chal" class="hidden">
+  <div class="card" id="chSetup">
+    <h3 style="margin:0 0 6px">🏁 チャレンジ</h3>
+    <p class="note">指定範囲の単語を、ミスなく・早く答えるほど高スコア。制限時間を短くするほどコンボ倍率が大きく伸びます。全問ノーミスなら最終スコア×1.5。コインは結果のスコアに応じて最後にまとめて貰えます（「コンボ制限時間」の強化は反映されません）。</p>
+    <div class="row" style="justify-content:space-between;margin:10px 0"><span class="note">出題範囲 No.</span><span class="row"><input type="number" id="cf" min="1" class="num"> 〜 <input type="number" id="ct" min="1" class="num"></span></div>
+    <div class="note">出題形式</div><div class="row seg" id="cMode" style="margin:4px 0 10px"></div>
+    <div class="note">問題数（範囲内の語数まで、1問単位）</div><div class="row" style="margin:4px 0 6px"><input type="number" id="cNum" min="1" class="num"><span class="note" id="cMax"></span></div><div class="row seg" id="cN" style="margin:0 0 10px"></div>
+    <div class="note">コンボ制限時間（1問あたり）</div><div class="row seg" id="cL" style="margin:4px 0 6px"></div>
+    <p class="note" id="cInfo"></p>
+    <p class="note" id="cErr" style="color:var(--ng)"></p>
+    <button class="spinbtn" id="cGo">スタート</button>
+  </div>
+  <div class="card hidden" id="chRun">
+    <div class="row" style="justify-content:space-between"><b id="cProg">1/20</b><b id="cScore" style="color:var(--gold)">0</b><span class="note">コンボ <b id="cCombo" style="color:var(--ok)">0</b>　×<span id="cMul">1.00</span></span></div>
+    <div class="tmr"><i id="cBar"></i></div>
+    <div class="q" id="cq"></div>
+    <div class="ch" id="cch"></div>
+    <div class="gain" id="cGain"></div>
+    <div class="row" style="justify-content:center"><button class="btn" id="cStop" style="padding:8px 16px;font-size:13px">中断する</button></div>
+  </div>
+  <div class="card hidden" id="chEnd"></div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><h3 style="margin:0">履歴</h3><button class="btn" id="cHClr" style="padding:6px 12px;font-size:12px">履歴を消去</button></div>
+    <p class="note" id="cBest"></p>
+    <div id="cHist"></div>
+  </div>
+</section>
+
+<section id="shop" class="hidden">
+
+  <div class="card" id="ups"></div>
+  <div class="card stats"><div><b id="sc">0</b>正解数</div><div><b id="sm">0</b>最高所持コイン</div><div><b id="sa">0%</b>正答率</div><div><b id="sb">0</b>最高コンボ</div></div>
+  <div class="card">
+    <h3 style="margin:0 0 6px">単語リスト</h3>
+    <p class="note">公開中の単語リストを自動で読み込みます。リストが更新されると、次に開いたときに自動で反映されます（例文・評価値は同じ単語のものを引き継ぎます）。下から自分で読み込んだリストを使っている間は、自動では切り替わりません。</p>
+    <p class="note" id="pubMsg" style="font-weight:bold"></p>
+    <div class="row" style="margin-bottom:10px"><button class="btn hidden" id="pubBtn">公開リストに切り替える</button></div>
+    <h3 style="margin:0 0 6px">自分で単語を読み込む</h3>
+    <p class="note">形式：「番号 単語 [品詞] 意味」の行（タブ区切りでも可）</p>
+    <input type="file" id="file" accept=".txt,.csv,.tsv,.json,.xlsx,.xls" style="width:100%;margin-bottom:8px;color:var(--text)">
+    <p class="note">対応ファイル：txt / csv / tsv / json / xlsx。1行に「単語, 意味」（番号列があってもOK）。jsonは [{"w":"agree","m":"賛成する"}] または {"agree":"賛成する"} 形式。文字コードはUTF-8とShift_JISを自動判定します。</p>
+    <textarea id="imp" placeholder="または、ここに直接貼り付け：1 agree [自] ①賛成する ..."></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="impBtn">読み込む</button>
+      <button class="btn" id="rsAll">評価値のみリセット</button>
+      <button class="btn" id="reset">初期化</button>
+      <span class="note" id="impMsg"></span>
+    </div>
+    <p class="note">現在の出題数：<span id="wc"></span>語</p>
+  </div>
+  <div class="card" id="fbCard">
+    <h3 style="margin:0 0 6px">☁ オンラインセーブ（ID・パスワード）</h3>
+    <p class="note">IDとパスワードでログインすると、セーブデータがクラウドに保存され、別の端末でも続きから遊べます。IDは英数字・「_」「.」「-」の3〜20文字、パスワードは6文字以上。パスワードを忘れると復元できません。</p>
+    <div id="fbLogin">
+      <input id="fbId" class="fld" placeholder="ID（例：leap_taro）" autocomplete="username" autocapitalize="none">
+      <input id="fbPw" class="fld" type="password" placeholder="パスワード" autocomplete="current-password">
+      <div class="row"><button class="btn" id="fbIn">ログイン</button><button class="btn" id="fbUp">新規登録</button></div>
+    </div>
+    <div id="fbUser" class="hidden">
+      <p style="margin:0 0 8px">ログイン中：<b id="fbName"></b></p>
+      <label class="note"><input type="checkbox" id="fbAuto" checked> 自動でクラウドに保存する</label>
+      <div class="row" style="margin-top:8px"><button class="btn" id="fbPush">今すぐ保存</button><button class="btn" id="fbPull">クラウドから読み込む</button><button class="btn" id="fbOut">ログアウト</button></div>
+    </div>
+    <p class="note" id="fbMsg" style="margin-top:8px"></p>
+  </div>
+  <div class="card">
+    <h3 style="margin:0 0 6px">セーブデータ</h3>
+    <p class="note">コイン・強化・各単語の評価値・出題範囲などがJSONになります。登録単語は含まれません（単語は「編集」タブのtxt出力を使います）。</p>
+    <div class="row" style="margin:8px 0">
+      <button class="btn" id="svOut">ファイルに書き出す</button>
+      <button class="btn" id="svCopy">コピー</button>
+    </div>
+    <input type="file" id="svIn" accept=".json,application/json" style="width:100%;margin-bottom:8px;color:var(--text)">
+    <textarea id="svTxt" placeholder="コピーしたJSONをここに貼り付けて読み込めます"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn" id="svLoad">貼り付けから読み込む</button><span class="note" id="svMsg"></span></div>
+  </div>
+</section>
+
+<div class="ov hidden" id="raceOv">
+  <div class="row" style="justify-content:space-between;width:100%;max-width:480px"><b>🐎 ダービー</b><button class="btn" id="ovTk" style="padding:6px 12px;font-size:13px">🎫 馬券</button><b id="ovLap" style="color:var(--gold)">1/2周</b></div>
+  <div id="bigTrack" style="width:100%;max-width:480px"></div>
+  <div id="ovLive" class="row" style="justify-content:center;gap:5px;margin:6px 0;max-width:480px"></div>
+  <div id="ovRes" class="res" style="white-space:pre-line;font-size:16px"></div>
+  <button class="btn hidden" id="ovClose" style="padding:12px 28px;margin-top:8px">閉じる</button>
+  <div class="dwBk hidden" id="dwBk"></div>
+  <aside class="dw" id="dw"><div class="row" style="justify-content:space-between;margin-bottom:6px"><b>🎫 購入中の馬券</b><button class="btn" id="dwX" style="padding:6px 12px;font-size:13px">✕</button></div><div class="note" id="dwSt" style="margin-bottom:6px"></div><div id="dwTk"></div><div class="note" style="margin-top:10px">賭け合計 <b id="dwTot" style="color:var(--gold);font-size:18px">0</b></div></aside>
+</div>
+<div class="ov hidden" id="chDet" style="justify-content:center"><div id="chDetBody" style="width:100%;max-width:420px"></div><button class="btn" id="chDetX" style="padding:10px 26px;margin-top:16px">閉じる</button></div>
+<div class="pop hidden" id="pop"><b id="popT"></b><div id="popM"></div><div class="row"><button class="btn" id="popX">閉じる</button><button class="btn" id="popN">次の問題 →</button></div></div>
+<!--
+ ===== Firebase 設定 =====
+ 1) https://console.firebase.google.com でプロジェクトを作成（無料のSparkプランのままでOK）
+ 2) 「Authentication」→ ログイン方法 → 「メール/パスワード」を有効化
+ 3) 「Firestore Database」を作成し、ルールを下記に差し替えて公開
+      rules_version = '2';
+      service cloud.firestore { match /databases/{d}/documents {
+        match /users/{uid} { allow read, write: if request.auth != null && request.auth.uid == uid; }
+      } }
+ 4) プロジェクトの設定 → マイアプリ(Web) に出る firebaseConfig を、下の FIREBASE_CONFIG に貼り付け
+ 5) このHTMLを https で公開（Firebase Hosting / GitHub Pages / Cloudflare Pages など）して開く
+-->
+<script>
+window.FIREBASE_CONFIG={
+  apiKey:"AIzaSyANyuxKG6mLgilJdLoi1e2RVRgaeTTnS3s",
+  authDomain:"dopa-gakusyu.firebaseapp.com",
+  projectId:"dopa-gakusyu",
+  appId:"1:214998964082:web:48adb6920acf02cbf26feb"
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const BUILTIN=`agree|賛成する
+oppose|～に反対する
+advise|～に忠告する
+tip|助言、ヒント、チップ
+discuss|～について話し合う
+blame|～に責任があるとする
+argue|主張する、言い争う
+claim|主張する、要求する
+complain|文句を言う
+offer|～を申し出る
+suggest|示唆する、提案する
+recommend|～を推薦する
+grateful|感謝している
+apologize|謝る
+excuse|言い訳
+celebrate|～を祝う
+congratulate|～にお祝いを述べる
+admire|～を称賛する
+impress|～に感銘を与える
+award|賞、～を授与する
+explain|～を説明する
+describe|～を説明する、描写する
+communicate|意思の疎通をはかる
+express|～を表現する
+promise|約束（する）
+information|情報
+technology|科学技術
+research|研究（する）
+material|材料、資料
+artificial|人工的な
+electric|電気の
+invent|～を発明する
+discover|～を発見する
+develop|発達する、開発する
+skill|技術、力
+ability|能力
+talent|才能
+effort|努力
+practice|練習、実践
+achieve|～を達成する
+manage|何とか～する、経営する
+improve|～を改善する
+produce|～を生産する
+create|～を創造する
+establish|～を確立する、設立する
+form|～を形成する、形態
+save|省く、貯金する、救う
+medicine|薬、医学
+patient|患者、忍耐強い
+condition|状態、条件
+medical|医療の
+stress|ストレス、強調する
+suffer|苦しむ
+exercise|運動
+breathe|呼吸する
+thirsty|のどが渇いた
+physical|身体的な、物理的な
+fever|熱
+strength|体力、力
+tear|涙、引き裂く
+taste|味がする、味
+rule|規則、支配する
+role|役割
+habit|習慣、癖
+custom|習慣、税関
+tradition|伝統
+society|社会
+law|法律、法則
+ancestor|祖先
+population|人口
+native|母国の、その土地の
+abroad|海外へ
+local|地元の
+survey|調査（する）
+value|価値、重んじる
+treasure|財宝、大事な物
+fashion|流行、流儀
+public|大衆、公共の
+evidence|証拠
+vote|投票（する）
+government|政府
+nation|国家、国民
+capital|首都、資本
+state|州、状態、述べる
+political|政治的な
+price|価格、代償
+sum|金額、合計
+budget|予算
+fee|料金、謝礼
+fare|運賃
+bill|勘定、請求書、法案
+trade|貿易、交換する
+wealth|富
+economy|経済、節約
+cost|費用がかかる、犠牲
+company|会社、仲間
+task|仕事
+earn|稼ぐ`;
+/* 公開単語リスト：public/ に置いたこのファイルを起動時に読み込みます。
+   リストを変えるときはファイルを差し替えるだけでOK（txt/tsv/csv。「強化・設定」の読み込みと同じ形式）。
+   取得できないとき（オフライン等）は上の BUILTIN を使います。 */
+const WORDS_URL='words.txt';
+const SYM=['🍉','🔔','🍒','🎰','💎','7️⃣','🔁'],WT=[.22,.19,.13,.14,.10,.05,.17];
+const [WM,BL,CH,BR,KK,SV,RP]=SYM;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let S={coins:0,lv:{m:0,c:0,l:0,t:0},best:0,ok:0,tot:0,mode:'en',bet:10,imp:''},combo=0,words=[],cur=null,locked=false;
+
+function save(){if(S.coins>(S.mx||0))S.mx=S.coins;try{localStorage.setItem('leapslot',JSON.stringify(S))}catch(e){}try{window.cloudSched&&window.cloudSched()}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('leapslot')||'null');if(d)S=Object.assign(S,d)}catch(e){}normS()}
+function normS(){if(!S.lv)S.lv={m:0,c:0,l:0,t:0};if(S.lv.t==null)S.lv.t=0;if(!Array.isArray(S.ch))S.ch=[];if(S.mx==null)S.mx=0}
+function splitTop(m){
+  const out=[];let buf='',d=0;
+  for(const ch of m){
+    if(ch==='（'||ch==='(')d++;
+    else if(ch==='）'||ch===')')d=Math.max(0,d-1);
+    if(d===0&&/[①-⑩、，,;；\/]/.test(ch)){out.push(buf);buf=''}else buf+=ch;
+  }
+  out.push(buf);return out;
+}
+function stripEnParen(m){
+  const st=[{o:'',out:'',own:''}];
+  for(const ch of m){
+    const t=st[st.length-1];
+    if(ch==='（'||ch==='('){st.push({o:ch,out:'',own:''});continue}
+    if((ch==='）'||ch===')')&&st.length>1){
+      const f=st.pop(),p=st[st.length-1];
+      p.out+=f.o+f.out+ch;
+      continue;
+    }
+    t.out+=ch;t.own+=ch;
+  }
+  while(st.length>1){const f=st.pop();st[st.length-1].out+=f.o+f.out}
+  return st[0].out;
+}
+function items(m){
+  m=stripEnParen(m.replace(/\[[^\]]*\]/g,' ').replace(/〈[^〉]*〉/g,''));
+  return splitTop(m).map(s=>s.replace(/\s+/g,' ').trim()).map(s=>/^[をにがはでと]/.test(s)?'～'+s:s).filter(s=>s&&/[^\s～（）()]/.test(s));
+}
+function parseList(txt){
+  const out=[],fmt=/^#leapslot/i.test(txt.trim());
+  txt.split(/\r?\n/).forEach(l=>{
+    l=l.trim();if(!l||l[0]==='#')return;let w,m,ex='',exj='';const nm=l.match(/^(\d+)[\s,;]/);
+    if(l.includes('\t')){
+      const raw=l.split('\t').map(x=>x.trim());
+      if(fmt){if(/^\d+$/.test(raw[0]))raw.shift();w=raw[0];m=raw[1];ex=raw[2]||'';exj=raw[3]||''}
+      else{const p=raw.filter(Boolean);if(/^\d+$/.test(p[0]))p.shift();w=p[0];m=p.slice(1).join(' ')}
+    }
+    else{const r=l.match(/^(?:\d+\s+)?([A-Za-z][A-Za-z\-'’ ~().]*?)\s+(\[.+|[^\x00-\x7F].*)$/);if(r){w=r[1];m=r[2]}}
+    if(!w){const c=l.match(/^(?:\d+\s*[,;]\s*)?"?([A-Za-z][^,;"]*?)"?\s*[,;]\s*"?(.+?)"?$/);if(c){w=c[1];m=c[2]}}
+    if(w&&m&&/^[A-Za-z]/.test(w)){const ms=items(m);if(ms.length)out.push({w:w.trim(),ms,ex,exj,n:nm?+nm[1]:out.length+1})}
+  });
+  return out;
+}
+const builtinWords=()=>BUILTIN.split('\n').map((l,i)=>{const [w,m]=l.split('|');return{w,ms:items(m),n:i+1,ex:'',exj:''}});
+function saveWords(){try{localStorage.setItem('leapslot_words',JSON.stringify(words))}catch(e){}}
+function buildWords(){
+  let a=null;
+  try{const d=JSON.parse(localStorage.getItem('leapslot_words')||'null');if(Array.isArray(d)&&d.length>10)a=d}catch(e){}
+  if(!a){
+    if(S.imp){const x=parseList(S.imp);if(x.length>20)a=x}
+    a=a||builtinWords();
+    words=a;S.imp='';saveWords();save();
+  }
+  words=a;
+  $('#wc').textContent=words.length;updRange();
+}
+function setWords(arr){
+  const old=new Map(words.map(x=>[x.w,x]));
+  arr.forEach(x=>{const o=old.get(x.w);if(o){if(!x.ex&&o.ex)x.ex=o.ex;if(!x.exj&&o.exj)x.exj=o.exj}});
+  words=arr;saveWords();$('#wc').textContent=words.length;updRange();
+}
+function decodeTxt(buf){let t=new TextDecoder('utf-8').decode(buf);if(t.includes('\ufffd'))t=new TextDecoder('shift_jis').decode(buf);return t.replace(/^\ufeff/,'')}
+/* 公開リストとの同期。leapslot_wsrc = {h:最後に反映した公開リストのハッシュ, custom:自分で読み込んだリストを使用中か} */
+function wsrc(){try{return JSON.parse(localStorage.getItem('leapslot_wsrc')||'null')||{}}catch(e){return{}}}
+function setWsrc(o){try{localStorage.setItem('leapslot_wsrc',JSON.stringify(o))}catch(e){}}
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)+'-'+s.length}
+const sameWords=(a,b)=>a.length===b.length&&a.every((x,i)=>x.w===b[i].w);
+function pubInfo(t,ng){const m=$('#pubMsg');m.textContent=t;m.style.color=ng?'var(--ng)':''}
+let pubN=0;
+async function fetchPub(){
+  const r=await fetch(WORDS_URL,{cache:'no-cache'});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const txt=decodeTxt(await r.arrayBuffer()),arr=parseList(txt);
+  if(arr.length<4)throw new Error('単語を読み取れませんでした');
+  return{h:hashStr(txt),arr};
+}
+function showCustom(st){
+  $('#pubBtn').classList.remove('hidden');
+  pubInfo((st.h&&st.h!==st.cur?'公開リストが更新されています（'+pubN+'語）。':'')+'いまは自分で読み込んだリスト（'+words.length+'語）を使用中です'+(pubN&&!(st.h&&st.h!==st.cur)?'（公開リスト：'+pubN+'語）':''));
+}
+/* mode: なし=起動時の自動同期／'update'=例文を引き継いで切り替え／'reset'=例文も消して置き換え */
+async function syncPub(mode){
+  let p;
+  try{p=await fetchPub()}
+  catch(e){pubInfo(mode?'公開リストを取得できませんでした（'+e.message+'）':'公開リストを取得できなかったため、この端末に保存されている単語（'+words.length+'語）で出題しています',!!mode);return false}
+  pubN=p.arr.length;
+  const st=wsrc();
+  if(!mode){
+    let custom=!!st.custom;
+    if(!st.h&&!custom)custom=!(sameWords(words,builtinWords())||sameWords(words,p.arr));
+    if(custom){setWsrc({h:st.h,custom:true});showCustom({h:st.h,cur:p.h});return false}
+    if(st.h===p.h){$('#pubBtn').classList.add('hidden');pubInfo('公開リスト（'+pubN+'語）を使用中');return true}
+  }
+  if(mode==='reset')words=[];
+  setWords(p.arr);setWsrc({h:p.h,custom:false});
+  $('#pubBtn').classList.add('hidden');
+  pubInfo(!mode&&st.h?'公開リストが更新されたので反映しました（'+pubN+'語）':'公開リスト（'+pubN+'語）を使用中');
+  next();return true;
+}
+const mult=()=>1+0.25*S.lv.m;
+const comboBonus=n=>1+Math.min(n,30)*(0.1+0.05*S.lv.c);
+const cost={m:()=>Math.round(100*Math.pow(1.7,S.lv.m)),c:()=>Math.round(150*Math.pow(1.8,S.lv.c)),l:()=>Math.round(200*Math.pow(2,S.lv.l)),t:()=>Math.round(120*Math.pow(1.7,S.lv.t||0))};
+
+function hud(){
+  if(!S.jp)S.jp=1000;const j=$('#jp');if(j)j.textContent=S.jp.toLocaleString();
+  if(S.coins>(S.mx||0))S.mx=S.coins;
+  $('#coins').textContent=S.coins.toLocaleString();
+  $('#combo').textContent=combo;
+  $('#mult').textContent=(mult()*comboBonus(combo)).toFixed(2);
+  updTmr();
+}
+const sc=x=>(S.sc&&S.sc[x.w])||0;
+let lastW=null;
+function disp(x){return x.ms.slice().sort(()=>Math.random()-.5).slice(0,2).join('、')}
+function ovl(a,b){return a.ms.some(p=>b.ms.some(q=>p===q||(p.length>1&&q.length>1&&(p.includes(q)||q.includes(p)))))}
+function pick(n,ex){
+  const a=[];let t=0;
+  while(a.length<n){
+    const x=words[Math.random()*words.length|0];t++;
+    if(x===ex||a.includes(x))continue;
+    if(t<800&&(ovl(x,ex)||a.some(y=>ovl(x,y))))continue;
+    a.push(x);
+  }
+  return a;
+}
+function chooseWord(){
+  let c=pool().filter(x=>!(S.mode==='ex'||S.mode==='ej')||x.ex);
+  if(!c.length)return null;
+  if(c.length>1)c=c.filter(x=>x!==lastW);
+  const wt=c.map(x=>Math.pow(1.3,10-Math.max(sc(x),-30)));
+  let r=Math.random()*wt.reduce((a,b)=>a+b,0),i=0;
+  for(;i<c.length-1;i++){r-=wt[i];if(r<0)break}
+  return lastW=c[i];
+}
+function allDone(){
+  locked=true;const noEx=(S.mode==='ex'||S.mode==='ej')&&!pool().some(x=>x.ex);
+  $('#q').classList.remove('ex');
+  $('#q').textContent=noEx?'📝 例文が未登録です':'🎉 この範囲は習得済み';
+  $('#hint').textContent=noEx?'「編集」タブで例文を登録するか、範囲を変えてください':'評価値が10を超えた単語は出題されません';$('#gain').textContent='';
+  $('#ch').innerHTML=noEx?'':'<button class="btn" id="rs">この範囲の評価値をリセット</button>';
+  if(!noEx)$('#rs').onclick=()=>{pool().forEach(x=>{if(S.sc)delete S.sc[x.w]});save();updRange();next()};
+}
+function inRange(){const a=S.from||1,b=S.to||1e9;return words.filter(x=>x.n>=a&&x.n<=b)}
+function pool(){const p=inRange();return p.length?p:words}
+function updRange(){
+  $('#rf').value=S.from||'';$('#rt').value=S.to||'';
+  $('#rf').placeholder=1;$('#rt').placeholder=words.reduce((a,x)=>Math.max(a,x.n),0);
+  const r=inRange(),n=r.length,k=r.filter(x=>sc(x)>10).length;
+  $('#rn').textContent=n?n+'語（習得'+k+'）':'該当なし（全範囲）';
+}
+function applyRange(){
+  let a=+$('#rf').value||0,b=+$('#rt').value||0;
+  if(a&&b&&a>b)[a,b]=[b,a];
+  S.from=a;S.to=b;save();updRange();next();
+}
+let exFull='';let cmAbsent=false;
+function showPop(){
+  $('#popT').textContent='答え　No.'+cur.n+'　'+cur.w;
+  $('#popM').textContent=cur.ms.join('、');
+  $('#pop').classList.remove('hidden');
+}
+function hidePop(){$('#pop').classList.add('hidden')}
+$('#popX').onclick=hidePop;$('#popN').onclick=()=>next();
+function blankEx(c){
+  const e=c.ex,B='＿＿＿＿';
+  if(/\[[^\]]+\]/.test(e)){let k=0;exFull=e.replace(/\[([^\]]+)\]/g,'$1');return{txt:e.replace(/\[([^\]]+)\]/g,(a,b)=>k++?b:B),ok:true}}
+  const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const base=c.w.replace(/[～~()]/g,'').trim();
+  exFull=e;
+  for(const st of [base,base.length>3?base.slice(0,-1):'']){
+    if(!st)continue;
+    const re=new RegExp('\\b'+esc(st)+'\\w*','i');
+    if(re.test(e))return{txt:e.replace(re,B),ok:true};
+  }
+  return{txt:e,ok:false};
+}
+const escH=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function ulEx(c){
+  const e=c.ex,bm=e.match(/\[([^\]]+)\]/);
+  if(bm){const st=s=>s.replace(/\[([^\]]+)\]/g,'$1');return{pre:st(e.slice(0,bm.index)),hit:bm[1],post:st(e.slice(bm.index+bm[0].length)),ok:true}}
+  const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const base=c.w.replace(/[～~()]/g,'').trim();
+  for(const s of [base,base.length>3?base.slice(0,-1):'']){
+    if(!s)continue;
+    const m=new RegExp('\\b'+esc(s)+'\\w*','i').exec(e);
+    if(m)return{pre:e.slice(0,m.index),hit:m[0],post:e.slice(m.index+m[0].length),ok:true};
+  }
+  return{pre:e,hit:'',post:'',ok:false};
+}
+function exjHtml(s){return escH(s).replace(/「([^」]*)」/g,'<b style="color:var(--gold)">「$1」</b>')}
+function exjMean(c){const m=(c.exj||'').match(/「([^」]+)」/);return m?m[1].trim():''}
+function ejText(o){
+  const mm=exjMean(cur);
+  if(o===cur)return mm||disp(cur);
+  return mm?o.ms[Math.random()*o.ms.length|0]:disp(o);
+}
+function renderQ(en){
+  const q=$('#q');q.classList.toggle('ex',S.mode==='ex'||S.mode==='ej');
+  if(S.mode==='ej'){const r=ulEx(cur);q.innerHTML=escH(r.pre)+(r.ok?'<u style="text-decoration-color:var(--gold);text-decoration-thickness:3px;text-underline-offset:5px">'+escH(r.hit)+'</u>':'')+escH(r.post);return r.ok}
+  if(S.mode==='ex'){const r=blankEx(cur);q.textContent=r.txt;return r.ok}
+  q.textContent=en?cur.w:disp(cur);return true;
+}
+function next(){
+  hidePop();locked=false;qEl=0;$('#gain').textContent='';$('#gain').className='gain';
+  cur=chooseWord();if(!cur){allDone();return}
+  cmAbsent=Math.random()<0.1;
+  const opts=(cmAbsent?pick(4,cur):[cur,...pick(3,cur)]).sort(()=>Math.random()-.5);
+  const en=S.mode==='en';
+  const okq=renderQ(en);
+  let ht;
+  if(S.mode==='ex')ht=(cur.exj?exjHtml(cur.exj):'空欄に入る語を選んでください')+(okq?'':'（空欄にできません：[ ]で対象語を囲んでください）');
+  else if(S.mode==='ej')ht='下線部の意味を選んでください'+(okq?'':'（下線にできません：[ ]で対象語を囲んでください）');
+  else ht=en?'意味を選んでください':'英単語を選んでください';
+  $('#hint').innerHTML=ht+'　No.'+cur.n+'　評価 '+sc(cur);
+  $('#ch').innerHTML='';$('#ch').classList.remove('done');
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.textContent=S.mode==='ej'?ejText(o):en?disp(o):o.w;
+    b.onclick=()=>answer(b,o===cur,opts);
+    b.dataset.c=o===cur?1:0;b._o=o;
+    const tg=document.createElement('small');tg.className='tag';
+    tg.textContent='No.'+o.n+(S.mode==='en'||S.mode==='ej'?'\u3000'+o.w:'');b.appendChild(tg);
+    $('#ch').appendChild(b);
+  });
+  const xr=document.createElement('div');xr.className='xr';
+  [['分からない',false],['この中にはない',true]].forEach(([t,isNone])=>{
+    const x=document.createElement('button');x.className='xb';x.textContent=t;
+    x.onclick=()=>answer(x,isNone?cmAbsent:false);
+    xr.appendChild(x);
+  });
+  $('#ch').appendChild(xr);
+  const nb=document.createElement('button');
+  nb.id='nx';nb.textContent='次の問題 →';nb.onclick=next;$('#ch').appendChild(nb);
+}
+function answer(btn,right){
+  if(locked)return;locked=true;S.tot++;S.sc=S.sc||{};S.sc[cur.w]=sc(cur)+(right?1:-5);updRange();if(S.mode==='ex'&&exFull)$('#q').textContent=exFull;
+  if(S.mode==='ej')$('#hint').innerHTML=(cur.exj?exjHtml(cur.exj):'（訳は未登録）')+'　No.'+cur.n+'　評価 '+sc(cur);
+  const g=$('#gain');
+  if(right){
+    combo++;S.ok++;if(combo>S.best)S.best=combo;
+    const r=Math.round(10*mult()*comboBonus(combo));
+    S.coins+=r;btn.classList.add('ok');
+    g.textContent='正解！ +'+r+' コイン'+(combo>1?'（'+combo+'コンボ）':'');g.classList.add('ok');
+  }else{
+    combo=0;btn.classList.add('ng');
+    $$('#ch button').forEach(b=>{if(b.dataset.c==='1')b.classList.add('ok')});
+    g.textContent='ざんねん… コンボが途切れた';g.classList.add('ng');
+  }
+  $('#ch').classList.add('done');
+  if(cmAbsent)showPop();
+  save();hud();
+}
+
+/* slot */
+function renderBets(){
+  const box=$('#bets');box.innerHTML='';
+  [10,50,100,500,1000,5000,10000,'ALL'].forEach(v=>{
+    const b=document.createElement('button');b.textContent=v==='ALL'?'ALL IN':v;
+    if(S.bet===v)b.className='on';
+    b.onclick=()=>{S.bet=v;save();renderBets()};box.appendChild(b);
+  });
+}
+let spinning=false;
+function setCell(el,s){el.textContent=s;el.dataset.s=s}
+function initReels(){const b=$('#reels');b.innerHTML='';for(let i=0;i<9;i++){const d=document.createElement('div');d.className='reel'+(i>=3&&i<=5?' mid':'');setCell(d,SYM[i%7]);b.appendChild(d)}}
+function rnd(){let r=Math.random();for(let i=0;i<SYM.length;i++){r-=WT[i];if(r<0)return SYM[i]}return SYM[0]}
+function judge(L,C,R){
+  if(L===C&&C===R){
+    const t={[SV]:[200,'7揃い'],[KK]:[80,'💎揃い'],[BR]:[30,'🎰揃い'],[CH]:[15,'チェリー揃い'],[BL]:[12,'ベル揃い'],[WM]:[8,'スイカ揃い'],[RP]:[1,'リプレイ（賭け金が戻る）']}[L];
+    return{mul:t[0],name:t[1],jp:L===SV,replay:L===RP};
+  }
+  const top=[SV,KK,BR];
+  if(top.includes(L)&&top.includes(C)&&top.includes(R))return{mul:5,name:'7・💎・🎰混合'};
+  if(L===CH&&C===CH)return{mul:4,name:'チェリー2つ'};
+  if(L===CH)return{mul:2,name:'左端チェリー'};
+  if(L===WM&&C===WM)return{mul:2,name:'スイカ2つ'};
+  if(L===BL&&C===BL)return{mul:2,name:'ベル2つ'};
+  return null;
+}
+function clearReach(){
+  $('#slotCard').classList.remove('reach','sreach');
+  $$('.reel').forEach(c=>c.classList.remove('rch','rchw'));
+}
+function clearFx(){clearReach();$('#slotCard').classList.remove('jpwin')}
+function startReach(cells,timers,slow,sup){
+  $('#slotCard').classList.add(sup?'sreach':'reach');
+  $('#res').innerHTML='<span class="rbn">'+(sup?'SUPER REACH!!':'REACH!')+'</span>';
+  [3,4].forEach(i=>cells[i].classList.add('rch'));
+  cells[5].classList.add('rchw');
+  [2,5,8].forEach(i=>{
+    clearInterval(timers[i]);
+    let d=110;
+    const tick=()=>{setCell(cells[i],rnd());d+=sup?55:45;slow[i]=setTimeout(tick,d)};
+    tick();
+  });
+}
+function confetti(){
+  const cols=['#ff3b3b','#ffb300','#ffee00','#3ddc97','#00b8ff','#7c4dff','#ff4fd8'];
+  for(let i=0;i<60;i++){
+    const d=document.createElement('div');d.className='cf';
+    d.style.left=Math.random()*100+'vw';d.style.background=cols[i%cols.length];
+    d.style.animationDuration=(2+Math.random()*2.5)+'s';d.style.animationDelay=(Math.random()*0.8)+'s';
+    d.style.transform='rotate('+Math.random()*360+'deg)';
+    document.body.appendChild(d);setTimeout(()=>d.remove(),5400);
+  }
+}
+function jackpotFx(){$('#slotCard').classList.add('jpwin');confetti()}
+function spin(){
+  if(spinning)return;
+  const bet=S.bet==='ALL'?S.coins:S.bet;
+  if(bet<=0||bet>S.coins){$('#res').textContent='コインが足りません。テストで稼ぎましょう';$('#res').style.color='var(--ng)';return}
+  spinning=true;$('#spin').disabled=true;S.coins-=bet;S.jp+=Math.round(bet*0.05);hud();
+  const res=Array.from({length:9},rnd),cells=$$('.reel');
+  $('#res').textContent='';
+  cells.forEach(r=>r.classList.remove('win'));clearFx();
+  const reach=res[3]===res[4],sup=reach&&[SV,KK,BR].includes(res[3]);
+  const timers=cells.map(r=>{r.classList.add('spin');return setInterval(()=>setCell(r,rnd()),70)});
+  const slow=[];
+  if(reach)setTimeout(()=>startReach(cells,timers,slow,sup),1160);
+  cells.forEach((r,i)=>setTimeout(()=>{
+    clearInterval(timers[i]);clearTimeout(slow[i]);setCell(r,res[i]);r.classList.remove('spin');
+    if(i===8)finish(res,bet);
+  },(reach&&i%3===2)?3700:700+(i%3)*450));
+}
+function finish(res,bet){
+  clearReach();const j=judge(res[3],res[4],res[5]),luck=1+0.1*S.lv.l,cells=$$('.reel');
+  let total=0,msg;
+  if(j){
+    [3,4,5].forEach(i=>cells[i].classList.add('win'));
+    if(j.jp)jackpotFx();
+    total=j.replay?bet:Math.round(bet*j.mul*luck);
+    if(j.jp){total+=S.jp;S.jp=1000}
+    msg=(j.jp?'🎰 JACKPOT！ ':'🎉 ')+j.name+(j.replay?'':' ×'+j.mul)+' +'+total.toLocaleString();
+  }else msg='外れ… −'+bet;
+  S.coins+=total;save();hud();
+  const r=$('#res');r.textContent=msg;if(j&&j.jp)r.innerHTML='<span class="jpt">'+escH(msg)+'</span>';r.style.color=total>bet?'var(--ok)':total===bet?'var(--text)':'var(--ng)';
+  spinning=false;$('#spin').disabled=false;
+}
+
+/* shop */
+function renderShop(){
+  const defs=[
+    ['m','報酬倍率','正解時の獲得コインが +25%（現在 ×'+mult().toFixed(2)+'）'],
+    ['c','コンボ強化','コンボごとの上乗せが +5%（現在 1コンボ＝+'+Math.round((0.1+0.05*S.lv.c)*100)+'%、30コンボまで）'],
+    ['t','コンボ制限時間','コンボが途切れるまでの制限時間が伸びます（1レベルあたり+0.7秒。現在 '+qLimit().toFixed(1)+'秒。チャレンジには反映されません）'],
+    ['l','あそび運','スロット・サイコロの配当が +10%（現在 ×'+(1+0.1*S.lv.l).toFixed(1)+'）']
+  ];
+  $('#ups').innerHTML=defs.map(([k,t,d])=>{
+    const c=cost[k]();
+    return `<div class="up"><div><h3>${t} Lv.${S.lv[k]||0}</h3><p>${d}</p></div><button class="btn" data-k="${k}" ${S.coins<c?'disabled':''}>${c.toLocaleString()}</button></div>`;
+  }).join('');
+  $$('#ups button').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k,c=cost[k]();
+    if(S.coins>=c){S.coins-=c;S.lv[k]=(S.lv[k]||0)+1;save();hud();renderShop()}
+  });
+  $('#sc').textContent=S.ok;$('#sm').textContent=Math.max(S.mx||0,S.coins).toLocaleString();$('#sa').textContent=(S.tot?Math.round(S.ok/S.tot*100):0)+'%';$('#sb').textContent=S.best;
+}
+
+/* combo time limit (quiz) */
+const qLimit=()=>{const l=S.lv.t||0;return 1+0.7*l};
+let qEl=0,tkLast=performance.now();
+function updTmr(){
+  const w=$('#tmrW');if(!w)return;
+  const on=combo>0&&!locked&&cur;
+  w.style.display=on?'block':'none';
+  if(!on)return;
+  const L=qLimit(),r=Math.max(0,1-qEl/L);
+  $('#tmrB').style.width=(r*100)+'%';$('#tmrB').style.background=r<.25?'var(--ng)':'var(--ok)';
+  $('#tmrT').textContent='コンボ制限 のこり '+Math.max(0,L-qEl).toFixed(1)+'秒';
+}
+/* challenge */
+const CH_L=[10,8,6,5,4,3,2],CH_N=[10,20,30,50];
+let ch=null;
+const chStep=l=>0.5/l;
+function csGet(){if(!S.cs)S.cs={};const c=S.cs;if(!c.m)c.m='en';if(!c.n)c.n=20;if(!c.l)c.l=8;return c}
+function chPool(){const a=+$('#cf').value||0,b=+$('#ct').value||0,lo=Math.min(a||1,b||1e9),hi=Math.max(a||1,b||1e9);return words.filter(x=>x.n>=(a&&b?lo:(a||1))&&x.n<=(a&&b?hi:(b||1e9)))}
+function chView(v){
+  $('#chSetup').classList.toggle('hidden',v==='run');
+  $('#chRun').classList.toggle('hidden',v!=='run');
+  if(v!=='end')$('#chEnd').classList.add('hidden');
+}
+function chSeg(id,arr,key,fmt){
+  const b=$(id);b.innerHTML='';
+  arr.forEach(v=>{const x=document.createElement('button');x.textContent=fmt(v);if(csGet()[key]===v)x.className='on';x.onclick=()=>{chKeep();csGet()[key]=v;save();renderChal()};b.appendChild(x)});
+}
+function chKeep(){const c=csGet();c.f=+$('#cf').value||0;c.t=+$('#ct').value||0}
+function renderChal(){
+  const c=csGet();
+  $('#cf').value=c.f!=null?c.f:(S.from||'');$('#ct').value=c.t!=null?c.t:(S.to||'');
+  chSeg('#cMode',['en','jp'],'m',v=>v==='en'?'英語→日本語':'日本語→英語');
+  const mx=chPool().length,nn=mx?Math.min(c.n,mx):c.n;
+  $('#cNum').value=nn;$('#cNum').max=mx||'';$('#cMax').textContent='最大 '+mx+'問';
+  chSeg('#cN',CH_N,'n',v=>v+'問');
+  chSeg('#cL',CH_L,'l',v=>v+'秒');
+  const st=chStep(c.l);
+  $('#cInfo').textContent='制限'+c.l+'秒：コンボ1回ごとに倍率 +'+Math.round(st*100)+'%（30コンボで最大 ×'+(1+30*st).toFixed(2)+'）。速く答えるほど最大×2のスピードボーナス。';
+  const h=S.ch||[];
+  $('#cBest').textContent=h.length?'ベスト '+Math.max(...h.map(x=>x.score)).toLocaleString()+' 点　挑戦 '+h.length+' 回（最新100件まで保存）':'まだ記録がありません';
+  const p=n=>String(n).padStart(2,'0');
+  $('#cHist').innerHTML=h.map(x=>{
+    const d=new Date(x.at);
+    return '<div class="up" data-i="'+h.indexOf(x)+'" style="cursor:pointer"><div><h3 style="font-size:15px">'+x.score.toLocaleString()+' 点'+(x.perfect?' ✨ノーミス':'')+'</h3><p>'+(d.getMonth()+1)+'/'+d.getDate()+' '+p(d.getHours())+':'+p(d.getMinutes())+'　No.'+(x.a||1)+'〜'+(x.b||'最後')+'　'+x.n+'問　制限'+x.lim+'秒　'+(x.mode==='en'?'英→日':'日→英')+'</p><p>正解 '+x.ok+'/'+x.n+'　最大コンボ '+x.maxC+'　合計 '+x.sec.toFixed(1)+'秒</p></div><b style="color:var(--gold)">+'+x.coins.toLocaleString()+'</b></div>';
+  }).join('');
+}
+function chDetail(i){
+  const x=(S.ch||[])[i];if(!x)return;
+  const d=new Date(x.at),p=n=>String(n).padStart(2,'0');
+  const row=(k,v)=>'<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:17px"><span style="color:var(--sub)">'+k+'</span><b>'+v+'</b></div>';
+  $('#chDetBody').innerHTML='<div class="card" style="text-align:center;padding:26px 22px"><div class="note" style="font-size:14px">🏁 チャレンジ結果</div><div style="font-size:60px;font-weight:900;color:var(--gold);line-height:1.2;margin:6px 0">'+x.score.toLocaleString()+'<small style="font-size:22px"> 点</small></div>'+(x.perfect?'<div style="color:var(--ok);font-weight:900;font-size:18px">✨ ノーミス ×1.5</div>':'')+'<div style="text-align:left;margin-top:14px">'
+    +row('日時',d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+' '+p(d.getHours())+':'+p(d.getMinutes()))
+    +row('出題範囲','No.'+(x.a||1)+' 〜 '+(x.b||'最後'))
+    +row('形式',x.mode==='en'?'英語→日本語':'日本語→英語')
+    +row('問題数',x.n+'問')
+    +row('コンボ制限時間',x.lim+'秒')
+    +row('正解 / ミス',x.ok+' / '+x.miss)
+    +row('最大コンボ',x.maxC)
+    +row('合計タイム',x.sec.toFixed(1)+'秒（平均 '+(x.sec/Math.max(1,x.n)).toFixed(1)+'秒/問）')
+    +row('獲得コイン','+'+x.coins.toLocaleString())
+    +'</div></div>';
+  $('#chDet').classList.remove('hidden');
+}
+$('#cHist').onclick=e=>{const r=e.target.closest('[data-i]');if(r)chDetail(+r.dataset.i)};
+$('#chDetX').onclick=()=>$('#chDet').classList.add('hidden');
+function chHud(){
+  $('#cProg').textContent=Math.min(ch.i+1,ch.q.length)+'/'+ch.q.length;
+  $('#cScore').textContent=ch.score.toLocaleString();
+  $('#cCombo').textContent=ch.combo;
+  $('#cMul').textContent=(1+Math.min(ch.combo,30)*chStep(ch.lim)).toFixed(2);
+}
+function chBar(){
+  if(!ch)return;
+  const r=Math.max(0,1-ch.el/ch.lim),b=$('#cBar');
+  b.style.width=(r*100)+'%';b.style.background=r<.25?'var(--ng)':'var(--ok)';
+}
+function chNext(){
+  if(!ch||!ch.on)return;
+  if(ch.i>=ch.q.length){chFinish();return}
+  const cur=ch.q[ch.i],en=ch.mode==='en';
+  ch.cur=cur;ch.locked=false;ch.el=0;
+  $('#cq').textContent=en?cur.w:disp(cur);
+  const opts=[cur,...pick(3,cur)].sort(()=>Math.random()-.5),box=$('#cch');
+  box.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.textContent=en?disp(o):o.w;b.dataset.c=o===cur?1:0;
+    b.onclick=()=>chAnswer(b,o===cur);box.appendChild(b);
+  });
+  const g=$('#cGain');g.textContent='';g.className='gain';
+  chHud();chBar();
+}
+function chAnswer(btn,right){
+  if(!ch||!ch.on||ch.locked)return;
+  ch.locked=true;const t=ch.el,g=$('#cGain');ch.sec+=Math.min(t,999);
+  if(right){
+    ch.combo++;ch.ok++;if(ch.combo>ch.maxC)ch.maxC=ch.combo;
+    const sp=1+Math.max(0,1-t/ch.lim),cm=1+Math.min(ch.combo,30)*chStep(ch.lim),pts=Math.round(100*sp*cm);
+    ch.score+=pts;btn.classList.add('ok');
+    g.textContent='+'+pts+'（スピード ×'+sp.toFixed(2)+'　コンボ ×'+cm.toFixed(2)+'）';g.className='gain ok';
+    ch.i++;chHud();setTimeout(chNext,600);
+  }else{
+    ch.combo=0;ch.miss++;btn.classList.add('ng');
+    $$('#cch button').forEach(b=>{if(b.dataset.c==='1')b.classList.add('ok')});
+    g.textContent='ミス… コンボが途切れた';g.className='gain ng';
+    ch.i++;chHud();setTimeout(chNext,1500);
+  }
+}
+function chFinish(){
+  ch.on=false;
+  const perfect=ch.miss===0&&ch.ok===ch.q.length,final=Math.round(ch.score*(perfect?1.5:1)),coins=Math.round(final/10*mult());
+  const prev=Math.max(0,...(S.ch||[]).map(x=>x.score));
+  S.ch.unshift({at:Date.now(),a:ch.a,b:ch.b,n:ch.q.length,mode:ch.mode,lim:ch.lim,score:final,ok:ch.ok,miss:ch.miss,maxC:ch.maxC,sec:ch.sec,coins,perfect});
+  if(S.ch.length>100)S.ch.length=100;
+  S.coins+=coins;save();hud();
+  const e=$('#chEnd');
+  e.innerHTML='<h3 style="margin:0 0 6px">結果</h3><div style="text-align:center"><div style="font-size:38px;font-weight:900;color:var(--gold)">'+final.toLocaleString()+' 点</div>'+(final>prev?'<div style="color:var(--ok);font-weight:900">🎉 ベスト更新！</div>':'')+(perfect?'<div style="color:var(--ok);font-weight:900">✨ ノーミス ×1.5</div>':'')+'<p class="note">正解 '+ch.ok+'/'+ch.q.length+'　最大コンボ '+ch.maxC+'　合計 '+ch.sec.toFixed(1)+'秒</p><div style="font-weight:900;font-size:20px;color:var(--gold)">+'+coins.toLocaleString()+' コイン</div></div>';
+  chView('end');e.classList.remove('hidden');renderChal();
+}
+$('#cGo').onclick=()=>{
+  const c=csGet();
+  let a=+$('#cf').value||0,b=+$('#ct').value||0;if(a&&b&&a>b)[a,b]=[b,a];
+  c.f=a;c.t=b;save();
+  const pl=words.filter(x=>x.n>=(a||1)&&x.n<=(b||1e9));
+  if(pl.length<4||words.length<4){$('#cErr').textContent='範囲内の単語が少なすぎます（4語以上必要）：'+pl.length+'語';return}
+  $('#cErr').textContent='';
+  const q=pl.slice().sort(()=>Math.random()-.5).slice(0,c.n);
+  ch={q,i:0,score:0,combo:0,maxC:0,ok:0,miss:0,sec:0,lim:c.l,mode:c.m,a,b,el:0,locked:true,on:true};
+  chView('run');chNext();
+};
+$('#cf').onchange=$('#ct').onchange=()=>{chKeep();save();renderChal()};
+$('#cNum').onchange=()=>{chKeep();const c=csGet(),mx=chPool().length;c.n=Math.max(1,Math.min(+$('#cNum').value||1,mx||1e9));save();renderChal()};
+$('#cStop').onclick=()=>{if(ch&&ch.on&&confirm('中断しますか？（記録・コインは付きません）')){ch.on=false;chView('setup')}};
+$('#cHClr').onclick=()=>{if(confirm('チャレンジの履歴を消去しますか？')){S.ch=[];save();renderChal()}};
+setInterval(()=>{
+  const now=performance.now(),dt=Math.min(0.5,(now-tkLast)/1000);tkLast=now;
+  if(!$('#quiz').classList.contains('hidden')&&!locked&&cur){
+    qEl+=dt;
+    if(combo>0&&qEl>=qLimit()){qEl=0;combo--;const g=$('#gain');g.textContent=combo>0?'コンボメーターが尽きた… コンボ −1（'+combo+'）':'時間切れ… コンボが途切れた';g.className='gain ng';hud()}
+    updTmr();
+  }
+  if(!$('#chal').classList.contains('hidden')&&ch&&ch.on&&!ch.locked){
+    ch.el+=dt;
+    if(ch.combo>0&&ch.el>=ch.lim){ch.combo=0;const g=$('#cGain');g.textContent='時間切れ… コンボが途切れた';g.className='gain ng';chHud()}
+    chBar();
+  }
+},100);
+
+/* wiring */
+$$('nav button').forEach(b=>b.onclick=()=>{
+  $$('nav button').forEach(x=>x.classList.toggle('on',x===b));hidePop();
+  ['quiz','slot','chal','shop','edit'].forEach(id=>$('#'+id).classList.toggle('hidden',id!==b.dataset.t));
+  if(b.dataset.t==='shop')renderShop();
+  if(b.dataset.t==='chal')renderChal();
+  if(b.dataset.t==='edit')renderEdit();
+});
+$$('[data-m]').forEach(b=>b.onclick=()=>{
+  S.mode=b.dataset.m;$$('[data-m]').forEach(x=>x.classList.toggle('on',x===b));save();next();
+});
+$('#spin').onclick=spin;
+$('#rf').onchange=$('#rt').onchange=applyRange;
+$('#rsAll').onclick=()=>{if(confirm('全単語の評価値をリセットしますか？')){S.sc={};save();updRange();next()}};
+$('#impBtn').onclick=()=>{
+  const t=$('#imp').value,n=parseList(t).length;
+  if(n<20){$('#impMsg').textContent='読み取れた単語が少なすぎます（'+n+'語）';return}
+  setWords(parseList(t));setWsrc(Object.assign(wsrc(),{custom:true}));showCustom({});$('#impMsg').textContent=n+'語を読み込みました（例文は同じ単語のものを引き継ぎます）';next();
+};
+$('#file').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  const msg=$('#impMsg');let txt='';
+  try{
+    const buf=await f.arrayBuffer(),ext=f.name.split('.').pop().toLowerCase();
+    if(ext==='xlsx'||ext==='xls'){
+      if(!window.XLSX){msg.textContent='Excel読み込みライブラリを取得できませんでした。csvで保存して試してください';return}
+      const wb=XLSX.read(buf,{type:'array'});
+      txt=wb.SheetNames.map(n=>XLSX.utils.sheet_to_csv(wb.Sheets[n],{FS:'\t'})).join('\n');
+    }else{
+      txt=decodeTxt(buf);
+      if(ext==='json'){
+        const j=JSON.parse(txt);
+        const arr=Array.isArray(j)?j:Object.entries(j);
+        txt=arr.map(x=>Array.isArray(x)?x[0]+'\t'+x[1]:(x.w||x.word||x.en)+'\t'+(x.m||x.meaning||x.jp||x.ja)).join('\n');
+      }
+    }
+    txt=txt.replace(/^\ufeff/,'');
+    $('#imp').value=txt;$('#impBtn').click();
+  }catch(err){msg.textContent='読み込みに失敗しました：'+err.message}
+  e.target.value='';
+};
+$('#reset').onclick=()=>{
+  if(!confirm('コイン・強化・評価値などを初期化します（登録単語は残ります）。よろしいですか？'))return;
+  S={coins:0,lv:{m:0,c:0,l:0,t:0},best:0,ok:0,tot:0,mode:'en',bet:10,imp:''};combo=0;normS();save();
+  buildWords();hud();renderBets();renderShop();next();
+};
+
+function saveJSON(){const o=Object.assign({app:'leap-slot',v:2,at:new Date().toISOString()},S);delete o.imp;return JSON.stringify(o,null,1)}
+function applySave(txt,skip){
+  const m=$('#svMsg');
+  try{
+    const d=JSON.parse(txt);
+    if(!d||typeof d!=='object'||typeof d.coins!=='number'||!d.lv)throw new Error('セーブデータの形式が違います');
+    if(!skip&&!confirm('現在のデータを上書きして読み込みます。よろしいですか？'))return;
+    delete d.app;delete d.v;delete d.at;delete d.imp;
+    S=Object.assign({coins:0,lv:{m:0,c:0,l:0,t:0},best:0,ok:0,tot:0,mode:'en',bet:10,imp:''},d);
+    combo=0;normS();save();buildWords();hud();renderBets();renderShop();
+    $$('[data-m]').forEach(x=>x.classList.toggle('on',x.dataset.m===S.mode));
+    next();m.textContent='読み込みました';
+  }catch(e){m.textContent='失敗：'+e.message}
+}
+$('#svOut').onclick=async()=>{
+  const m=$('#svMsg');
+  let dl=null;
+  try{dl=window.claude&&claude.use?await claude.use('downloads'):null}catch(e){}
+  if(!dl){$('#svTxt').value=saveJSON();m.textContent='ファイル保存が使えないため、下の欄にJSONを表示しました。コピーして保存してください';return}
+  try{await dl.save({filename:'leap-slot-save.json',data:saveJSON()});m.textContent='書き出しました'}
+  catch(e){m.textContent=e&&e.code==='declined'?'キャンセルしました':'書き出せませんでした（コピーを使ってください）'}
+};
+$('#svCopy').onclick=async()=>{
+  const t=saveJSON();$('#svTxt').value=t;
+  try{await navigator.clipboard.writeText(t);$('#svMsg').textContent='コピーしました'}
+  catch(e){$('#svTxt').select();$('#svMsg').textContent='下の欄のJSONを手動でコピーしてください'}
+};
+$('#svIn').onchange=async e=>{const f=e.target.files[0];if(f)applySave(await f.text());e.target.value=''};
+$('#svLoad').onclick=()=>applySave($('#svTxt').value);
+
+/* edit mode */
+let eIdx=1;
+const wordByN=n=>words.find(x=>x.n===n);
+function showEdit(n){
+  eIdx=n;$('#eN').value=n;
+  const x=wordByN(n);
+  $('#eW').value=x?x.w:'';$('#eM').value=x?x.ms.join('、'):'';
+  $('#eE').value=x&&x.ex?x.ex:'';$('#eJ').value=x&&x.exj?x.exj:'';
+  $('#eInfo').textContent=x?'No.'+n+'：登録済み／例文 '+(x.ex?'あり':'なし')+'／評価値 '+sc(x):'No.'+n+'：未登録（保存すると新規登録されます）';
+  $('#eMsg').textContent='';
+}
+function renderEdit(){
+  $('#tStat').textContent='登録 '+words.length+'語／例文あり '+words.filter(x=>x.ex).length+'語';
+  showEdit(eIdx);
+}
+$('#eGo').onclick=()=>showEdit(Math.max(1,+$('#eN').value||1));
+$('#eP').onclick=()=>showEdit(Math.max(1,eIdx-1));
+$('#eNx').onclick=()=>showEdit(eIdx+1);
+$('#eFind').onclick=()=>{const f=words.find(x=>x.n>eIdx&&!x.ex);if(f)showEdit(f.n);else $('#eMsg').textContent='これ以降に例文未登録の単語はありません'};
+$('#eSave').onclick=()=>{
+  const n=+$('#eN').value;
+  if(!n||n<1){$('#eMsg').textContent='番号を入力してください';return}
+  const w=$('#eW').value.trim(),ms=items($('#eM').value);
+  if(!w||!ms.length){$('#eMsg').textContent='英単語と意味は必須です';return}
+  const cl=s=>s.replace(/[\t\r\n]+/g,' ').trim();
+  const ex=cl($('#eE').value),exj=cl($('#eJ').value);
+  const x=wordByN(n);
+  if(x){
+    if(x.w!==w&&S.sc&&S.sc[x.w]!==undefined){S.sc[w]=S.sc[x.w];delete S.sc[x.w]}
+    Object.assign(x,{w,ms,ex,exj});
+  }else{words.push({n,w,ms,ex,exj});words.sort((a,b)=>a.n-b.n)}
+  saveWords();save();$('#wc').textContent=words.length;updRange();
+  renderEdit();$('#eMsg').textContent='保存しました';
+};
+$('#eDel').onclick=()=>{
+  const n=+$('#eN').value,x=wordByN(n);
+  if(!x){$('#eMsg').textContent='その番号は未登録です';return}
+  if(words.length<=10){$('#eMsg').textContent='登録単語が少なくなりすぎるため削除できません';return}
+  if(!confirm('No.'+n+' '+x.w+' を削除します。よろしいですか？'))return;
+  words=words.filter(y=>y!==x);saveWords();$('#wc').textContent=words.length;updRange();
+  renderEdit();$('#eMsg').textContent='削除しました';
+};
+$('#wReset').onclick=async()=>{
+  if(!confirm('登録単語（例文を含む）をすべて消して、公開中の単語リストに戻します。よろしいですか？'))return;
+  $('#tMsg').textContent='読み込み中…';
+  if(await syncPub('reset')){renderEdit();$('#tMsg').textContent='公開リスト（'+words.length+'語）に戻しました'}
+  else $('#tMsg').textContent='公開リストを取得できませんでした。通信環境を確認してください';
+};
+$('#pubBtn').onclick=async()=>{
+  if(!confirm('公開中の単語リスト'+(pubN?'（'+pubN+'語）':'')+'に切り替えます。例文と評価値は同じ単語のものを引き継ぎます。よろしいですか？'))return;
+  if(await syncPub('update'))$('#impMsg').textContent='公開リストに切り替えました';
+};
+function wordsTxt(){
+  const c=s=>(s||'').replace(/[\t\r\n]+/g,' ');
+  return ['#leapslot v1 : 番号<TAB>英単語<TAB>意味<TAB>例文<TAB>例文の訳'].concat(words.map(x=>[x.n,c(x.w),c(x.ms.join('、')),c(x.ex),c(x.exj)].join('\t'))).join('\n')+'\n';
+}
+$('#tOut').onclick=async()=>{
+  const m=$('#tMsg'),t=wordsTxt();let dl=null;
+  try{dl=window.claude&&claude.use?await claude.use('downloads'):null}catch(e){}
+  if(!dl){$('#tTxt').value=t;m.textContent='ファイル保存が使えないため、下の欄に表示しました。コピーして保存してください';return}
+  try{await dl.save({filename:'leap-words.txt',data:t});m.textContent='書き出しました'}
+  catch(e){m.textContent=e&&e.code==='declined'?'キャンセルしました':'書き出せませんでした（コピーを使ってください）'}
+};
+$('#tCopy').onclick=async()=>{
+  const t=wordsTxt();$('#tTxt').value=t;
+  try{await navigator.clipboard.writeText(t);$('#tMsg').textContent='コピーしました'}
+  catch(e){$('#tTxt').select();$('#tMsg').textContent='下の欄のテキストを手動でコピーしてください'}
+};
+
+/* dice */
+let dChip=10,dBets={},dRolling=false;
+const PIPS={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+function setDie(el,n){el.innerHTML='';for(let i=0;i<9;i++){const p=document.createElement('i');if(PIPS[n].includes(i))p.className='on';el.appendChild(p)}}
+function initDice(){const d=$('#dice');d.innerHTML='';[1,3,5].forEach(n=>{const e=document.createElement('div');e.className='die';setDie(e,n);d.appendChild(e)})}
+const dTotal=()=>Object.values(dBets).reduce((a,b)=>a+b,0);
+function dmsg(t,c){const m=$('#dres');m.textContent=t;m.style.color=c||'var(--text)'}
+function renderChips(){
+  const b=$('#chips');b.innerHTML='';
+  [10,50,100,500].forEach(v=>{const x=document.createElement('button');x.textContent=v;if(dChip===v)x.className='on';x.onclick=()=>{dChip=v;renderChips()};b.appendChild(x)});
+}
+function renderBoard(win){
+  win=win||new Set();
+  const g=$('#dgrid');g.innerHTML='';
+  const row=(cols,items)=>{
+    const d=document.createElement('div');d.className='dr';d.style.gridTemplateColumns='repeat('+cols+',1fr)';
+    items.forEach(([k,t,s])=>{
+      const b=document.createElement('button');b.className='dc'+(win.has(k)?' hit':'');
+      b.innerHTML='<span>'+t+'</span><small>'+s+'</small>'+(dBets[k]?'<i>'+dBets[k]+'</i>':'');
+      b.onclick=()=>addBet(k);d.appendChild(b);
+    });
+    g.appendChild(d);
+  };
+  const lab=t=>{const l=document.createElement('div');l.className='dlab';l.textContent=t;g.appendChild(l)};
+  row(2,[['small','小','4〜10'],['big','大','11〜17']]);
+  lab('出目（出た個数ぶん配当）');
+  row(6,[1,2,3,4,5,6].map(n=>['n'+n,n,'']));
+  lab('ゾロ目');
+  row(1,[['any','ゾロ目（どれでも）','30倍']]);
+  row(6,[1,2,3,4,5,6].map(n=>['t'+n,''+n+n+n,'180倍']));
+  $('#dtot').textContent=dTotal();
+}
+function addBet(k){
+  if(dRolling)return;
+  if(dTotal()+dChip>S.coins){dmsg('コインが足りません','var(--ng)');return}
+  dBets[k]=(dBets[k]||0)+dChip;renderBoard();dmsg('');
+}
+function rollDice(){
+  if(dRolling)return;
+  const tot=dTotal();
+  if(tot<=0){dmsg('マスをタップしてベットしてください','var(--sub)');return}
+  if(tot>S.coins){dmsg('コインが足りません','var(--ng)');return}
+  dRolling=true;$('#droll').disabled=true;S.coins-=tot;hud();dmsg('');renderBoard();
+  const r=[0,0,0].map(()=>1+(Math.random()*6|0)),ds=$$('.die');
+  $('#dice').classList.add('spin');
+  const tm=ds.map(e=>setInterval(()=>setDie(e,1+(Math.random()*6|0)),70));
+  ds.forEach((e,i)=>setTimeout(()=>{
+    clearInterval(tm[i]);setDie(e,r[i]);
+    if(i===2){$('#dice').classList.remove('spin');finishDice(r,tot)}
+  },600+i*300));
+}
+function finishDice(r,tot){
+  const sum=r[0]+r[1]+r[2],triple=r[0]===r[1]&&r[1]===r[2],luck=1+0.1*S.lv.l;
+  let ret=0;const win=new Set();
+  for(const [k,a] of Object.entries(dBets)){
+    let p=0;
+    if(k==='big'){if(!triple&&sum>=11)p=a}
+    else if(k==='small'){if(!triple&&sum<=10)p=a}
+    else if(k[0]==='n'){p=a*r.filter(x=>x===+k[1]).length}
+    else if(k==='any'){if(triple)p=a*30}
+    else if(k[0]==='t'){if(triple&&r[0]===+k[1])p=a*180}
+    if(p>0){ret+=a+Math.round(p*luck);win.add(k)}
+  }
+  S.coins+=ret;save();hud();renderBoard(win);
+  const kind=triple?'ゾロ目':sum>=11?'大':'小';
+  let msg='出目 '+r.join('・')+'（合計'+sum+'・'+kind+'）\n';
+  if(ret>tot)msg+='🎉 +'+(ret-tot).toLocaleString();
+  else if(ret===tot)msg+='トントン（賭け金が戻った）';
+  else if(ret>0)msg+='払戻 '+ret.toLocaleString()+'（−'+(tot-ret).toLocaleString()+'）';
+  else msg+='外れ −'+tot.toLocaleString();
+  dmsg(msg,ret>tot?'var(--ok)':ret===tot?'var(--text)':'var(--ng)');
+  $('#dres').style.whiteSpace='pre-line';
+  dRolling=false;$('#droll').disabled=false;
+}
+$('#droll').onclick=rollDice;
+$('#dclr').onclick=()=>{if(dRolling)return;dBets={};renderBoard();dmsg('')};
+$$('[data-g]').forEach(b=>b.onclick=()=>{
+  $$('[data-g]').forEach(x=>x.classList.toggle('on',x===b));
+  $('#slotCard').classList.toggle('hidden',b.dataset.g!=='slot');
+  $('#diceCard').classList.toggle('hidden',b.dataset.g!=='dice');
+  $('#derbyCard').classList.toggle('hidden',b.dataset.g!=='derby');
+});
+/* derby */
+const DB_NAMES=['ワードマスター','エイタンゴー','ジュケンノオウ','フラッシュカード','アンキノカミ','コンボダッシュ','ゴウカクロード','ヤマカンジャー','ダイヤモンドリーフ','サイコロスター','ジャックポット','ミスフォーミング','レインボーロード','ゴールデンペン'];
+const DB_COL=['#f5f5f5','#222','#e53935','#1e88e5','#fdd835','#43a047','#fb8c00','#ec407a'],DB_TXT=['#222','#fff','#fff','#fff','#222','#fff','#222','#fff'];
+const DB_TYPES=[['win','単勝',1],['place','複勝',1],['qui','馬連',2],['exa','馬単',2],['wide','ワイド',2],['tri','3連複',3],['tfc','3連単',3]];
+const DB_RTP=0.85;
+let dbH=[],dbP=null,dbType='win',dbSel=[],dbTk=[],dbChip=100,dbState='bet',dbEls=[];
+const dbBadge=i=>'<span class="hb" style="background:'+DB_COL[i]+';color:'+DB_TXT[i]+'">'+(i+1)+'</span>';
+const dbNeed=()=>DB_TYPES.find(t=>t[0]===dbType)[2];
+const dbOrd=t=>t==='exa'||t==='tfc';
+const dbName=t=>DB_TYPES.find(x=>x[0]===t)[1];
+const dbJoin=(t,s)=>s.map(x=>x+1).join(dbOrd(t)?'→':'-');
+const dbKey=(t,s)=>(dbOrd(t)||t==='win'||t==='place')?s.join(','):s.slice().sort((a,b)=>a-b).join(',');
+const dbOdds=p=>Math.min(9999,Math.max(1.1,DB_RTP/p));
+const fmtO=o=>o>=100?String(Math.round(o)):o.toFixed(1);
+function dbCalc(w){
+  const n=w.length,W=w.reduce((a,b)=>a+b,0);
+  const P={win:Array(n).fill(0),place:Array(n).fill(0),qui:{},exa:{},wide:{},tri:{},tfc:{}};
+  const add=(o,k,v)=>{o[k]=(o[k]||0)+v},srt=a=>a.slice().sort((x,y)=>x-y).join(',');
+  for(let a=0;a<n;a++)for(let b=0;b<n;b++){if(b===a)continue;for(let c=0;c<n;c++){if(c===a||c===b)continue;
+    const p=w[a]/W*w[b]/(W-w[a])*w[c]/(W-w[a]-w[b]);
+    P.win[a]+=p;[a,b,c].forEach(x=>P.place[x]+=p);
+    add(P.exa,a+','+b,p);add(P.tfc,a+','+b+','+c,p);add(P.qui,srt([a,b]),p);add(P.tri,srt([a,b,c]),p);
+    [[a,b],[a,c],[b,c]].forEach(q=>add(P.wide,srt(q),p));
+  }}
+  return P;
+}
+function dbProb(t,s){return t==='win'?dbP.win[s[0]]:t==='place'?dbP.place[s[0]]:dbP[t][dbKey(t,s)]}
+const dbSpent=()=>dbTk.reduce((a,t)=>a+t.stake,0);
+function dbNew(){
+  const names=DB_NAMES.slice().sort(()=>Math.random()-.5).slice(0,8);
+  dbH=names.map(n=>({n,w:1+Math.pow(Math.random(),1.6)*9}));
+  dbP=dbCalc(dbH.map(h=>h.w));
+  dbSel=[];dbTk=[];dbState='bet';
+  $('#dbGo').textContent='レース開始';$('#dbGo').disabled=false;$('#dbres').textContent='';
+  renderTrack();renderTypes();renderPick();renderTk();
+}
+let dbDots=[];
+const DB_G={Ls:120,cx:180,cy:110,R0:30,D:7,laps:2};
+function dbXY(i,p){
+  const {Ls,cx,cy,R0,D}=DB_G,r=R0+i*D,xr=cx+Ls/2,xl=cx-Ls/2,P=2*Ls+2*Math.PI*r;
+  let d=p*P;
+  if(d<Ls/2)return[cx+d,cy+r];
+  d-=Ls/2;
+  if(d<Math.PI*r){const th=d/r;return[xr+r*Math.sin(th),cy+r*Math.cos(th)]}
+  d-=Math.PI*r;
+  if(d<Ls)return[xr-d,cy-r];
+  d-=Ls;
+  if(d<Math.PI*r){const th=Math.PI+d/r;return[xl+r*Math.sin(th),cy+r*Math.cos(th)]}
+  d-=Math.PI*r;
+  return[xl+d,cy+r];
+}
+let bigDots=[],dbPauseAt=0,dbShift=0,dbRes=null;
+function renderBig(){
+  const {Ls,cx,cy,R0,D}=DB_G,Ro=R0+7*D+7,Ri=R0-7;
+  const rect=(r,at)=>'<rect x="'+(cx-Ls/2-r)+'" y="'+(cy-r)+'" width="'+(Ls+2*r)+'" height="'+(2*r)+'" rx="'+r+'" '+at+'/>';
+  let s='<svg viewBox="0 0 200 320" style="width:100%;height:calc(100vh - 220px);display:block"><g transform="translate(210,-20) rotate(90)">';
+  s+=rect(Ro,'fill="#9c6b3f"')+rect(Ri,'fill="#2e7d32"');
+  for(let i=0;i<=8;i++)s+=rect(R0+(i-0.5)*D,'fill="none" stroke="#fff" stroke-opacity=".25" stroke-width=".5"');
+  s+='<line x1="'+cx+'" x2="'+cx+'" y1="'+(cy+Ri)+'" y2="'+(cy+Ro)+'" stroke="#fff" stroke-width="2"/></g>';
+  dbH.forEach((h,i)=>{s+='<circle id="bc'+i+'" r="3.6" fill="'+DB_COL[i]+'" stroke="#000" stroke-opacity=".6" stroke-width=".6"/><text id="bt'+i+'" text-anchor="middle" font-size="4.4" font-weight="900" fill="'+DB_TXT[i]+'">'+(i+1)+'</text>'});
+  s+='</svg>';
+  $('#bigTrack').innerHTML=s;
+  bigDots=dbH.map((h,i)=>({c:$('#bc'+i),t:$('#bt'+i)}));
+}
+function openOv(){
+  renderBig();dbPos(dbH.map(()=>0));
+  $('#ovRes').textContent='';$('#ovClose').classList.add('hidden');$('#ovLap').textContent='1/'+DB_G.laps+'周';
+  $('#raceOv').classList.remove('hidden');
+}
+function setLap(p){const l=Math.min(DB_G.laps,Math.floor(p*DB_G.laps)+1);$('#ovLap').textContent=l+'/'+DB_G.laps+'周'}
+$('#ovClose').onclick=()=>$('#raceOv').classList.add('hidden');
+function dwOpen(){
+  const b=$('#dwTk');b.innerHTML='';
+  dbTk.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='tk';
+    const sp=document.createElement('span');
+    sp.textContent=(dbRes?(dbRes[i]>0?'✅ ':'❌ '):'')+dbName(t.type)+' '+dbJoin(t.type,t.sel)+'　'+t.stake+' ×'+fmtO(t.odds)+(dbRes&&dbRes[i]>0?'　+'+dbRes[i]:'');
+    d.appendChild(sp);b.appendChild(d);
+  });
+  $('#dwTot').textContent=dbSpent();
+  if(dbState==='racing'&&!dbPauseAt)dbPauseAt=performance.now();
+  $('#dwSt').textContent=dbState==='racing'?'⏸ レース一時停止中':'';
+  $('#dwBk').classList.remove('hidden');$('#dw').classList.add('open');
+}
+function dwClose(){
+  $('#dwBk').classList.add('hidden');$('#dw').classList.remove('open');
+  if(dbPauseAt){dbShift+=performance.now()-dbPauseAt;dbPauseAt=0}
+}
+$('#ovTk').onclick=dwOpen;$('#dwX').onclick=dwClose;$('#dwBk').onclick=dwClose;
+function dbPos(ps){ps.forEach((p,i)=>{
+  const [x,y]=dbXY(i,(p*DB_G.laps)%1);
+  dbDots[i].setAttribute('cx',x);dbDots[i].setAttribute('cy',y);
+  const b=bigDots[i];
+  if(b&&b.c){const bx=210-y,by=x-20;b.c.setAttribute('cx',bx);b.c.setAttribute('cy',by);b.t.setAttribute('x',bx);b.t.setAttribute('y',by+1.6)}
+})}
+function renderLive(ord){
+  const h='<span class="note">順位</span>'+ord.map(i=>dbBadge(i)).join('');$('#live').innerHTML=h;$('#ovLive').innerHTML=h;
+}
+function renderTrack(){
+  const {Ls,cx,cy,R0,D}=DB_G,Ro=R0+7*D+7,Ri=R0-7;
+  const rect=(r,at)=>'<rect x="'+(cx-Ls/2-r)+'" y="'+(cy-r)+'" width="'+(Ls+2*r)+'" height="'+(2*r)+'" rx="'+r+'" '+at+'/>';
+  let s='<svg viewBox="0 0 360 220" style="width:100%;display:block;margin-bottom:6px">';
+  s+=rect(Ro,'fill="#9c6b3f"')+rect(Ri,'fill="#2e7d32"');
+  for(let i=0;i<=8;i++)s+=rect(R0+(i-0.5)*D,'fill="none" stroke="#fff" stroke-opacity=".25" stroke-width=".6"');
+  s+='<line x1="'+cx+'" x2="'+cx+'" y1="'+(cy+Ri)+'" y2="'+(cy+Ro)+'" stroke="#fff" stroke-width="2.5"/>';
+  s+='<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-size="9" fill="#fff" fill-opacity=".6" font-weight="700">ダービー</text>';
+  dbH.forEach((h,i)=>{s+='<circle id="hd'+i+'" r="3.4" fill="'+DB_COL[i]+'" stroke="#000" stroke-opacity=".6" stroke-width=".8"/>'});
+  s+='</svg>';
+  $('#track').innerHTML=s;
+  dbDots=dbH.map((h,i)=>$('#hd'+i));
+  dbPos(dbH.map(()=>0));
+  renderLive(dbH.map((h,i)=>i));
+}
+function renderTypes(){
+  const b=$('#dbTypes');b.innerHTML='';
+  DB_TYPES.forEach(([k,t])=>{
+    const x=document.createElement('button');x.textContent=t;if(dbType===k)x.className='on';
+    x.onclick=()=>{if(dbState!=='bet')return;dbType=k;dbSel=[];renderTypes();renderPick()};
+    b.appendChild(x);
+  });
+}
+function renderPick(){
+  const g=$('#dbPick');g.innerHTML='';
+  const pop=dbH.map((h,i)=>i).sort((a,b)=>dbH[b].w-dbH[a].w);
+  dbH.forEach((h,i)=>{
+    const si=dbSel.indexOf(i),b=document.createElement('button');
+    b.className='hr'+(si>=0?' sel':'');
+    const mk=si<0?'':dbOrd(dbType)?(si+1)+'着':'✔';
+    b.innerHTML=dbBadge(i)+'<span class="nm">'+h.n+'<br><small style="color:var(--sub);font-weight:500">'+(pop.indexOf(i)+1)+'番人気</small></span><span class="od">単 '+fmtO(dbOdds(dbP.win[i]))+'<br>複 '+fmtO(dbOdds(dbP.place[i]))+'</span><span class="mk">'+mk+'</span>';
+    b.onclick=()=>{
+      if(dbState!=='bet')return;
+      const k=dbSel.indexOf(i);
+      if(k>=0)dbSel.splice(k,1);else if(dbSel.length<dbNeed())dbSel.push(i);
+      renderPick();
+    };
+    g.appendChild(b);
+  });
+  const ok=dbSel.length===dbNeed();
+  $('#dbOddsLine').textContent=ok?dbName(dbType)+' '+dbJoin(dbType,dbSel)+'　オッズ ×'+fmtO(dbOdds(dbProb(dbType,dbSel))):'馬を'+dbNeed()+'頭選んでください'+(dbOrd(dbType)?'（選んだ順が着順）':'');
+  $('#dbAdd').disabled=!ok;
+}
+function renderTk(res){
+  const b=$('#dbTkt');b.innerHTML='';
+  dbTk.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='tk';
+    const sp=document.createElement('span');
+    sp.textContent=(res?(res[i]>0?'✅ ':'❌ '):'')+dbName(t.type)+' '+dbJoin(t.type,t.sel)+'　'+t.stake+' ×'+fmtO(t.odds)+(res&&res[i]>0?'　+'+res[i]:'');
+    d.appendChild(sp);
+    if(!res){const x=document.createElement('button');x.textContent='✕';x.className='btn';x.style.padding='4px 10px';x.onclick=()=>{dbTk.splice(i,1);renderTk()};d.appendChild(x)}
+    b.appendChild(d);
+  });
+  $('#dbTot').textContent=dbSpent();
+}
+function dbRenderChips(){
+  const b=$('#dbChips');b.innerHTML='';
+  [10,50,100,500,1000,5000].forEach(v=>{const x=document.createElement('button');x.textContent=v;if(dbChip===v)x.className='on';x.onclick=()=>{dbChip=v;dbRenderChips()};b.appendChild(x)});
+}
+$('#dbAdd').onclick=()=>{
+  if(dbState!=='bet'||dbSel.length!==dbNeed())return;
+  if(dbSpent()+dbChip>S.coins){$('#dbres').textContent='コインが足りません';$('#dbres').style.color='var(--ng)';return}
+  dbTk.push({type:dbType,sel:dbSel.slice(),stake:dbChip,odds:dbOdds(dbProb(dbType,dbSel))});
+  dbSel=[];$('#dbres').textContent='';renderPick();renderTk();
+};
+$('#dbClr').onclick=()=>{if(dbState!=='bet')return;dbTk=[];dbSel=[];renderTk();renderPick()};
+$('#dbGo').onclick=()=>{
+  if(dbState==='done'){dbNew();return}
+  if(dbState!=='bet')return;
+  const tot=dbSpent(),m=$('#dbres');
+  if(!tot){m.textContent='ベットを追加してください';m.style.color='var(--sub)';return}
+  if(tot>S.coins){m.textContent='コインが足りません';m.style.color='var(--ng)';return}
+  S.coins-=tot;hud();save();
+  dbState='racing';$('#dbGo').disabled=true;m.textContent='';dbSel=[];renderPick();openOv();
+  runRace(tot);
+};
+function runRace(tot){
+  let rest=dbH.map((h,i)=>i);const order=[];
+  while(rest.length){
+    const W=rest.reduce((a,i)=>a+dbH[i].w,0);let r=Math.random()*W,k=0;
+    for(;k<rest.length-1;k++){r-=dbH[rest[k]].w;if(r<0)break}
+    order.push(rest[k]);rest.splice(k,1);
+  }
+  const T=Array(8);order.forEach((h,rk)=>T[h]=16+rk*0.8);
+  const ph=dbH.map(()=>[Math.random()*6.28,1.2+Math.random()*1.8]),A=0.6,G=(i,x)=>x-(A/ph[i][1])*(Math.cos(ph[i][0]+ph[i][1]*x)-Math.cos(ph[i][0]));
+  const GM=dbH.map(()=>0.65+Math.random()*0.95);/* <1:逃げ(前半先行) >1:差し(後半に捲る) */
+  const t0=performance.now(),got=Array(8).fill(false);let done=0;
+  dbPauseAt=0;dbShift=0;dbRes=null;dwClose();
+  function step(now){
+    if(dbPauseAt){requestAnimationFrame(step);return}
+    const t=(now-t0-dbShift)/1000,ps=[];
+    for(let i=0;i<8;i++){
+      const s=Math.min(1,t/T[i]);
+      let p=Math.pow(Math.max(0,G(i,t)/G(i,T[i])),GM[i]);
+      p=t>=T[i]?1:Math.max(0,Math.min(0.999,p));
+      ps.push(p);
+      if(t>=T[i]&&!got[i]){got[i]=true;done++}
+    }
+    dbPos(ps);
+    renderLive(ps.map((p,i)=>i).sort((a,b)=>ps[b]-ps[a]||T[a]-T[b]));setLap(Math.max(...ps));
+    if(done<8)requestAnimationFrame(step);else settleRace(order,tot);
+  }
+  requestAnimationFrame(step);
+}
+function settleRace(order,tot){
+  const luck=1+0.1*S.lv.l,top=order.slice(0,3),two=order.slice(0,2);
+  const ret=dbTk.map(t=>{
+    const s=t.sel;let hit=false;
+    if(t.type==='win')hit=s[0]===order[0];
+    else if(t.type==='place')hit=top.includes(s[0]);
+    else if(t.type==='qui')hit=s.every(x=>two.includes(x));
+    else if(t.type==='exa')hit=s[0]===order[0]&&s[1]===order[1];
+    else if(t.type==='wide'||t.type==='tri')hit=s.every(x=>top.includes(x));
+    else hit=s[0]===order[0]&&s[1]===order[1]&&s[2]===order[2];
+    return hit?t.stake+Math.round(t.stake*(t.odds-1)*luck):0;
+  });
+  const total=ret.reduce((a,b)=>a+b,0),net=total-tot;
+  dbRes=ret;S.coins+=total;save();hud();renderTk(ret);
+  const m=$('#dbres');
+  m.textContent='1着 '+(order[0]+1)+'番　2着 '+(order[1]+1)+'番　3着 '+(order[2]+1)+'番\n'+(net>0?'🎉 +'+net.toLocaleString():net===0?'トントン':'ハズレ −'+(-net).toLocaleString());
+  m.style.color=net>0?'var(--ok)':net===0?'var(--text)':'var(--ng)';
+  $('#ovRes').textContent=m.textContent;$('#ovRes').style.color=m.style.color;$('#ovClose').classList.remove('hidden');
+  dbState='done';$('#dbGo').disabled=false;$('#dbGo').textContent='次のレース →';
+}
+dbRenderChips();dbNew();
+initDice();renderBoard();renderChips();
+
+load();buildWords();
+$$('[data-m]').forEach(x=>x.classList.toggle('on',x.dataset.m===S.mode));
+hud();renderBets();initReels();next();
+syncPub();
+</script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const q=s=>document.querySelector(s),cfg=window.FIREBASE_CONFIG;
+const say=(t,c)=>{const m=q('#fbMsg');m.textContent=t;m.style.color=c||'var(--sub)'};
+const NG='var(--ng)',OK='var(--ok)';
+if(!cfg||!cfg.apiKey){
+  say('Firebaseの設定が未入力です。ファイル冒頭の FIREBASE_CONFIG を入力してください。',NG);
+  ['#fbIn','#fbUp'].forEach(i=>q(i).disabled=true);
+}else{
+  const app=initializeApp(cfg),auth=getAuth(app),db=getFirestore(app);
+  let user=null,synced=false,timer=null,dirty=false;
+  const mail=id=>id.toLowerCase()+'@leap-save.example.com';
+  const idOk=id=>/^[A-Za-z0-9_.-]{3,20}$/.test(id);
+  const ERR={'auth/email-already-in-use':'このIDはすでに使われています','auth/invalid-credential':'IDかパスワードが違います','auth/wrong-password':'IDかパスワードが違います','auth/user-not-found':'IDかパスワードが違います','auth/weak-password':'パスワードは6文字以上にしてください','auth/network-request-failed':'ネットワークに接続できません','auth/operation-not-allowed':'Firebaseで「メール/パスワード」のログイン方法を有効にしてください','auth/too-many-requests':'試行回数が多すぎます。しばらくしてからやり直してください','permission-denied':'Firestoreのルールで拒否されました。ルールの設定を確認してください'};
+  const errJa=e=>ERR[e.code]||('エラー：'+(e.code||e.message));
+  const ref=()=>doc(db,'users',user.uid);
+  const now=()=>new Date().toLocaleTimeString('ja-JP');
+  async function push(){
+    if(!user)return;
+    await setDoc(ref(),{data:saveJSON(),at:Date.now()});
+    dirty=false;say('☁ 保存しました（'+now()+'）',OK);
+  }
+  async function firstSync(){
+    try{
+      const sn=await getDoc(ref());
+      if(sn.exists()){
+        const at=new Date(sn.data().at).toLocaleString('ja-JP');
+        if(confirm('クラウドにセーブデータがあります（'+at+' 保存）。\nOK：クラウドのデータを読み込む\nキャンセル：この端末のデータでクラウドを上書き')){
+          applySave(sn.data().data,true);say('☁ クラウドのデータを読み込みました',OK);
+        }else await push();
+      }else await push();
+      synced=true;
+    }catch(e){say(errJa(e),NG)}
+  }
+  function view(){
+    q('#fbLogin').classList.toggle('hidden',!!user);
+    q('#fbUser').classList.toggle('hidden',!user);
+    if(user)q('#fbName').textContent=(user.email||'').split('@')[0];
+  }
+  onAuthStateChanged(auth,async u=>{user=u;synced=false;view();if(u)await firstSync();else if(!q('#fbMsg').textContent.startsWith('ログアウト'))say('')});
+  window.cloudSched=()=>{
+    if(!user||!synced||!q('#fbAuto').checked)return;
+    dirty=true;clearTimeout(timer);
+    timer=setTimeout(()=>push().catch(e=>say(errJa(e),NG)),4000);
+  };
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&dirty&&user&&synced){clearTimeout(timer);push().catch(()=>{})}});
+  const cred=()=>{
+    const id=q('#fbId').value.trim(),pw=q('#fbPw').value;
+    if(!idOk(id)){say('IDは英数字・「_」「.」「-」の3〜20文字にしてください',NG);return null}
+    if(pw.length<6){say('パスワードは6文字以上にしてください',NG);return null}
+    return [mail(id),pw];
+  };
+  q('#fbUp').onclick=async()=>{const c=cred();if(!c)return;say('登録中…');try{await createUserWithEmailAndPassword(auth,...c);q('#fbPw').value=''}catch(e){say(errJa(e),NG)}};
+  q('#fbIn').onclick=async()=>{const c=cred();if(!c)return;say('ログイン中…');try{await signInWithEmailAndPassword(auth,...c);q('#fbPw').value=''}catch(e){say(errJa(e),NG)}};
+  q('#fbOut').onclick=async()=>{
+    if(dirty){try{await push()}catch(e){}}
+    await signOut(auth);say('ログアウトしました');
+  };
+  q('#fbPush').onclick=async()=>{try{await push()}catch(e){say(errJa(e),NG)}};
+  q('#fbPull').onclick=async()=>{
+    try{
+      const sn=await getDoc(ref());
+      if(!sn.exists()){say('クラウドにデータがありません',NG);return}
+      if(!confirm('この端末のデータを、クラウドのデータ（'+new Date(sn.data().at).toLocaleString('ja-JP')+' 保存）で上書きします。よろしいですか？'))return;
+      applySave(sn.data().data,true);say('☁ 読み込みました（'+now()+'）',OK);
+    }catch(e){say(errJa(e),NG)}
+  };
+}
+</script>
+</body>
+</html>
